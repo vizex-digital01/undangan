@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 900" preserveAspectRatio="xMidYMid slice">
+ <defs>
+  <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#fffaf2"/><stop offset=".7" stop-color="#fbf3e9"/><stop offset="1" stop-color="#f4e9de"/></linearGradient>
+  <g id="bloom"><g fill="#e4a9a6" opacity=".88"><ellipse cx="0" cy="-19" rx="10" ry="22"/><ellipse cx="0" cy="19" rx="10" ry="22"/><ellipse cx="-19" cy="0" rx="22" ry="10"/><ellipse cx="19" cy="0" rx="22" ry="10"/><ellipse cx="-13" cy="-13" rx="12" ry="18" transform="rotate(-45 -13 -13)"/><ellipse cx="13" cy="13" rx="12" ry="18" transform="rotate(-45 13 13)"/></g><circle r="8" fill="#e7c37c"/><circle r="3" fill="#fff4dd"/></g>
+  <g id="branch" stroke="#668b72" stroke-width="2.4" fill="none" stroke-linecap="round"><path d="M4 190Q40 95 123 0"/><path d="M32 137q-43-32-29-65q30 1 30 65" fill="#a5baa2"/><path d="M55 96q30-37 65-33q-2 38-65 33" fill="#a6bb9f"/><path d="M73 69q-42-13-33-44q40 0 33 44" fill="#90a98a"/></g>
+ </defs>
+ <rect width="420" height="900" fill="url(#bg)"/>
+ <ellipse cx="210" cy="500" rx="180" ry="320" fill="#fff" opacity=".27"/>
+ <g transform="translate(4 -28)"><use href="#branch"/><use href="#bloom" transform="translate(65 45) scale(.65)"/><use href="#bloom" transform="translate(117 94) scale(.42)"/><use href="#bloom" transform="translate(27 127) scale(.35)"/></g>
+ <g transform="translate(416 -28) scale(-1 1)"><use href="#branch"/><use href="#bloom" transform="translate(65 45) scale(.65)"/><use href="#bloom" transform="translate(117 94) scale(.42)"/><use href="#bloom" transform="translate(27 127) scale(.35)"/></g>
+ <g transform="translate(0 930) scale(1 -1)" opacity=".74"><use href="#branch"/><use href="#bloom" transform="translate(65 45) scale(.55)"/><use href="#bloom" transform="translate(100 94) scale(.45)"/></g>
+ <g transform="translate(420 930) scale(-1 -1)" opacity=".74"><use href="#branch"/><use href="#bloom" transform="translate(65 45) scale(.55)"/><use href="#bloom" transform="translate(100 94) scale(.45)"/></g>
+ <path d="M38 232v435M382 232v435" stroke="#bfa48c" stroke-opacity=".3" stroke-width="1"/>
+</svg>
