@@ -1,7 +1,7 @@
 import {authorized,effectiveTemplates} from '@/lib/admin-v13';
 import {response,fail} from '@/lib/server';
 export const dynamic='force-dynamic';
-const validTabs=new Set(['overview','orders','invitations','templates','customers','analytics','settings','notifications','audit']);
+const validTabs=new Set(['overview','orders','invitations','templates','customers','rsvp','analytics','settings','notifications','audit']);
 export async function GET(req){
  try{
   const {error,db}=await authorized(req);if(error)return error;
@@ -15,6 +15,13 @@ export async function GET(req){
    const {data,error:e}=await db.from('vizex_admin_events').select('*').order('created_at',{ascending:false}).limit(150);if(e)throw e;
    const {data:pending,error:pe}=await db.from('orders').select('id,amount,submitted_at').eq('payment_method','seabank_manual').eq('status','submitted').order('submitted_at',{ascending:false}).limit(100);if(pe)throw pe;
    return response({events:data||[],pending:pending||[]});
+  }
+  if(tab==='rsvp'){
+   const {data,error:e}=await db.from('vizex_rsvp').select('id,invitation_id,guest_name,attendance,party_size,wish,updated_at').order('updated_at',{ascending:false}).limit(1000);if(e)throw e;
+   const ids=[...new Set((data||[]).map(x=>x.invitation_id))];const {data:invs,error:ie}=ids.length?await db.from('invitations').select('id,data').in('id',ids):{data:[],error:null};if(ie)throw ie;
+   const lookup=new Map((invs||[]).map(x=>[x.id,(x.data?.couple1||'')+' & '+(x.data?.couple2||'')]));
+   const rows=(data||[]).map(x=>({...x,couple:lookup.get(x.invitation_id)||x.invitation_id}));
+   return response({items:rows,counts:{hadir:rows.filter(x=>x.attendance==='hadir').length,tidak:rows.filter(x=>x.attendance==='tidak').length,ragu:rows.filter(x=>x.attendance==='ragu').length,people:rows.reduce((s,x)=>s+x.party_size,0)},truncated:rows.length===1000});
   }
   if(tab==='audit'){
    const {data,error:e}=await db.from('vizex_admin_audit').select('*').order('created_at',{ascending:false}).limit(100);if(e)throw e;return response({audit:data||[]});

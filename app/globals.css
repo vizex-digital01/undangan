@@ -82,3 +82,59 @@
 .customer-fields{padding:12px;border:1px solid #e7d6c4;border-radius:12px;margin-bottom:18px}.customer-fields h3{font-size:15px;margin:0 0 12px}
 @media(max-width:1050px){.v13-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.v13-templategrid{grid-template-columns:repeat(2,minmax(0,1fr))}.v13-columns{grid-template-columns:1fr}}
 @media(max-width:760px){.v13-sidebar{position:fixed;z-index:100;left:0;top:0;transform:translateX(-102%);transition:transform .2s}.v13-sidebar.open{transform:translateX(0)}.v13-mobilebtn{display:grid}.v13-top{padding:12px 16px}.v13-topactions span{display:none}.v13-content{padding:22px 14px 65px}.v13-metrics{gap:10px}.v13-metric{padding:15px}.v13-metric strong{font-size:24px}.v13-templategrid,.v13-settingsgrid{grid-template-columns:1fr}.v13-toolbar{flex-direction:column}.v13-toolbar label{max-width:none}.v13-heading h1{font-size:36px}}
+
+
+/* VIZEX v14 — theme art directions (more than a simple palette change) */
+.v14-invitation{position:relative;isolation:isolate}
+.v14-invitation .invite-cover{overflow:hidden}
+.v14-invitation .cover-vines{animation:v14Float 6s ease-in-out infinite}
+.v14-invitation .cover-photo{animation:v14Breathe 7s ease-in-out infinite}
+.v14-invitation .cover-sun{animation:v14Glow 12s ease-in-out infinite alternate}
+.v14-invitation .invite-section .ornament{animation:v14Float 5s ease-in-out infinite}
+.v14-invitation.category-batik .invite-cover,.v14-invitation.category-adat .invite-cover{background-image:repeating-linear-gradient(47deg,transparent 0px,transparent 18px,rgba(113,84,37,.09) 19px,transparent 22px),radial-gradient(ellipse at 30% 80%,rgba(170,116,47,.26),transparent 64%)}
+.v14-invitation.category-batik .invite-cover::before,.v14-invitation.category-adat .invite-cover::before{content:'❖     ◈     ❖     ◈     ❖';position:absolute;top:9%;left:0;width:100%;font-size:25px;letter-spacing:12px;opacity:.38;white-space:nowrap;animation:v14Ornament 16s linear infinite;pointer-events:none}
+.v14-invitation.category-floral .invite-cover::before{content:'✿  ❀  ✾  ❁';position:absolute;top:10%;left:10%;font-size:30px;letter-spacing:23px;opacity:.4;animation:v14Petal 12s ease-in-out infinite;pointer-events:none}
+.v14-invitation.category-royal .cover-photo{box-shadow:0 0 0 8px rgba(209,176,108,.12),0 0 48px rgba(223,178,100,.18)}
+.v14-invitation.category-royal .invite-cover::before{content:'✧';position:absolute;top:12%;right:18%;color:#dcb87f;font-size:48px;animation:v14Glow 5s ease-in-out infinite alternate}
+.v14-invitation.category-islamic .invite-cover .cover-photo{border-radius:48% 48% 5% 5%;overflow:hidden}
+.v14-invitation.category-islamic .invite-cover::before{content:'۞';position:absolute;top:11%;font-size:65px;opacity:.27;animation:v14Float 8s ease-in-out infinite}
+.v14-invitation.category-cinematic .invite-cover::before{content:'✧  ✦  ✧  ✦';position:absolute;top:8%;left:5%;font-size:14px;letter-spacing:50px;opacity:.5;animation:v14Drift 14s linear infinite;white-space:nowrap}
+.v14-invitation .v14-music-button{position:fixed;bottom:21px;right:18px;z-index:60;background:rgba(30,48,44,.88);border:1px solid #cfb47f;color:#fff7ec;border-radius:50px;padding:12px 16px;font-size:12px;cursor:pointer;box-shadow:0 8px 24px #0002}
+.v14-rsvp-form{display:grid;gap:12px;margin:25px auto;max-width:410px;text-align:left;background:rgba(255,255,255,.22);padding:20px;border:1px solid rgba(129,103,75,.24);border-radius:14px}
+.v14-rsvp-form label{display:grid;gap:5px;font-size:12px;letter-spacing:.02em}
+.v14-rsvp-form input,.v14-rsvp-form select,.v14-rsvp-form textarea{border-radius:8px;border:1px solid #9a876b80;background:#fffdf8ed;color:#38322b;width:100%;padding:11px;font:inherit;min-height:42px}
+.v14-rsvp-form button{justify-self:center;cursor:pointer}
+.v14-rsvp-feedback{text-align:center;font-size:13px;line-height:1.5}
+.v14-rsvp-manager{max-width:1100px}.v14-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.v14-stats article{background:#fff;border:1px solid #e4d9cb;border-radius:13px;padding:18px;display:grid;gap:9px}.v14-stats b{font-size:29px}.v14-stats span{font-size:12px;color:#69665c}.v14-rsvp-controls{display:flex;gap:10px;margin:20px 0}.v14-rsvp-controls input{flex:1;border:1px solid #ddd5c9;border-radius:9px;padding:12px;min-width:0}
+@keyframes v14Float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes v14Breathe{0%,100%{filter:brightness(1);transform:scale(1)}50%{filter:brightness(1.07);transform:scale(1.025)}}
+@keyframes v14Glow{from{opacity:.3;filter:blur(1px)}to{opacity:.9;filter:blur(0)}}
+@keyframes v14Ornament{from{transform:translateX(-15px)}to{transform:translateX(28px)}}
+@keyframes v14Petal{0%,100%{transform:translate(0,0) rotate(-8deg)}50%{transform:translate(22px,35px) rotate(16deg)}}
+@keyframes v14Drift{from{transform:translateX(0)}to{transform:translateX(48px)}}
+@media(max-width:650px){.v14-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.v14-rsvp-controls{flex-direction:column}.v14-invitation .v14-music-button{right:9px;bottom:12px;font-size:11px;padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){.v14-invitation .cover-vines,.v14-invitation .cover-photo,.v14-invitation .cover-sun,.v14-invitation .invite-section .ornament,.v14-invitation .invite-cover::before{animation:none!important}}
+
+
+/* VIZEX v14 theme palette presets */
+.theme-batik-kawung{--theme-bg:#f3e4cd;--theme-ink:#623f2b;--theme-accent:#a07031}
+.theme-mega-mendung{--theme-bg:#dbe9f0;--theme-ink:#244e6d;--theme-accent:#548eaf}
+.theme-parang{--theme-bg:#f1e3c5;--theme-ink:#57422e;--theme-accent:#a9763d}
+.theme-jawa{--theme-bg:#e9ddc4;--theme-ink:#67472e;--theme-accent:#b18b4b}
+.theme-minang{--theme-bg:#eee2c7;--theme-ink:#632c2b;--theme-accent:#ba954c}
+.theme-sunda{--theme-bg:#e5ebda;--theme-ink:#456045;--theme-accent:#7b966a}
+.theme-melayu{--theme-bg:#dbe9df;--theme-ink:#225a49;--theme-accent:#a78b4e}
+.theme-islamic{--theme-bg:#e5edde;--theme-ink:#315a42;--theme-accent:#b59855}
+.theme-andalus{--theme-bg:#e5edf1;--theme-ink:#3f5d75;--theme-accent:#bd9858}
+.theme-peacock{--theme-bg:#dce9e8;--theme-ink:#295a66;--theme-accent:#b79958}
+.theme-autumn{--theme-bg:#f2e5d5;--theme-ink:#89573d;--theme-accent:#bc885b}
+.theme-ocean{--theme-bg:#d9ebed;--theme-ink:#2c6672;--theme-accent:#6ca4aa}
+/* The existing template components use --iv-bg/ink/accent tokens; keep both forms. */
+.theme-batik-kawung,.theme-mega-mendung,.theme-parang,.theme-jawa,.theme-minang,.theme-sunda,.theme-melayu,.theme-islamic,.theme-andalus,.theme-peacock,.theme-autumn,.theme-ocean{--iv-bg:var(--theme-bg);--iv-ink:var(--theme-ink);--iv-accent:var(--theme-accent)}
+
+.theme-batik-kawung,.theme-parang,.theme-jawa{background:radial-gradient(ellipse at top,#fbf1df,#dfcba9);color:#69492e}
+.theme-mega-mendung,.theme-andalus{background:linear-gradient(150deg,#d8e9ed,#9ebaca);color:#315a78}
+.theme-minang{background:linear-gradient(135deg,#f2e2c2,#a87464);color:#672e2d}
+.theme-sunda,.theme-islamic,.theme-melayu{background:radial-gradient(ellipse at top,#f1f1df,#b5cdbd);color:#345945}
+.theme-peacock,.theme-ocean{background:radial-gradient(ellipse at top,#e0f1ec,#7eaeb8);color:#1f5a65}
+.theme-autumn{background:linear-gradient(150deg,#f9eadc,#d0a286);color:#805139}
