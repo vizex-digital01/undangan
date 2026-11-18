@@ -1,3 +1,5 @@
+> **VIZEX v9:** Pembayaran SeaBank manual sudah ditambahkan. Baca **[PANDUAN_PEMBAYARAN_SEABANK.md](PANDUAN_PEMBAYARAN_SEABANK.md)** terlebih dahulu. Untuk database yang sudah dipakai, jalankan **`supabase/seabank_migration.sql`**, bukan membuat ulang tabel.
+
 # VIZEX — Digital Invitation Studio
 
 Aplikasi Next.js App Router untuk website jasa undangan digital: katalog, editor, upload foto privat, draft, checkout Midtrans Snap, dan publikasi undangan **hanya setelah pembayaran terverifikasi**.
@@ -57,3 +59,21 @@ Aplikasi Next.js App Router untuk website jasa undangan digital: katalog, editor
 3. Klik Preview untuk tema biru dan dark. Klik **Buka Undangan** lalu scroll ke bawah, cek tombol **Ulangi opening**.
 4. Hubungkan Supabase sesuai instruksi di atas, buat akun dan draft, lalu uji upload foto.
 5. Pastikan tombol publikasi terkunci; endpoint `POST /api/checkout` harus menolak permintaan dalam mode pengembangan.
+
+
+## Update v8 — alur buat undangan dan editor foto
+- Dashboard membedakan sesi login hilang vs kegagalan API. Error database tidak lagi menyebabkan redirect login; ada **Coba lagi** dan empty state **Jelajahi template**.
+- Dari dashboard bisa membuat undangan baru lewat katalog. Klik **Custom** → masuk akun → draft dibuat → editor dibuka.
+- Editor memiliki feedback simpan draft, live preview, unggah 12 foto privat (sampul = foto pertama), serta tombol **Hapus** foto. Hapus foto membutuhkan autentikasi dan hanya bisa untuk file yang dimiliki akun terkait.
+- Saat upload/hapus foto, data teks yang belum tersimpan akan disimpan dahulu agar tidak tertimpa refresh data.
+- API checkout tetap terkunci selama `ENABLE_CHECKOUT=false`. Data undangan tetap draft privat.
+
+### Uji di Vercel setelah upload versi v8
+1. Login → dashboard. Pastikan tidak kembali ke login saat database terganggu.
+2. Klik **+ Buat baru** → Custom di salah satu template. Pastikan masuk ke editor.
+3. Ubah nama dan tanggal, klik **Simpan Draft**, refresh, pastikan tersimpan.
+4. Unggah 1–2 foto; pastikan muncul di editor dan preview. Hapus salah satu lalu refresh.
+5. Klik **Buka Undangan** pada preview, lihat animasi dan galeri.
+6. Kembali ke dashboard dan cek draft tampil. Tombol publikasi harus tetap terkunci.
+
+**Perhatian:** GitHub/Vercel tidak memerlukan menjalankan ulang `schema.sql` untuk perubahan v8. Build lengkap dan integrasi layanan nyata masih perlu diuji setelah deployment.
