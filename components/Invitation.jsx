@@ -1,6 +1,7 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {resolveMusic} from '@/lib/music';
+import EventInvitation from '@/components/EventInvitation';
 
 const SECTIONS=[
  {id:'opening',label:'Awal',symbol:'✉'},
@@ -43,7 +44,7 @@ function Countdown({date,time}){
  return <div className="v15-countdown">{n.map((v,i)=><div key={i}><strong>{String(v).padStart(2,'0')}</strong><span>{['Hari','Jam','Menit','Detik'][i]}</span></div>)}</div>;
 }
 
-export default function Invitation({data={},template,preview=false,invitationId=null}){
+function WeddingInvitation({data={},template,preview=false,invitationId=null}){
  const [opened,setOpened]=useState(false);
  const [opening,setOpening]=useState(false);
  const [active,setActive]=useState('opening');
@@ -258,4 +259,8 @@ export default function Invitation({data={},template,preview=false,invitationId=
    {lightbox>=0&&<div className="v15-lightbox" role="dialog" aria-modal="true" aria-label="Lihat foto"><button type="button" aria-label="Tutup foto" onClick={()=>setLightbox(-1)}>✕</button><img alt="Foto diperbesar" src={photos[lightbox]}/></div>}
   </div>
  </div>;
+}
+
+export default function Invitation(props){
+ return props.template?.eventType&&props.template.eventType!=='wedding'?<EventInvitation {...props}/>:<WeddingInvitation {...props}/>;
 }

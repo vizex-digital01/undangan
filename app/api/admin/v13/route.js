@@ -19,7 +19,7 @@ export async function GET(req){
   if(tab==='rsvp'){
    const {data,error:e}=await db.from('vizex_rsvp').select('id,invitation_id,guest_name,attendance,party_size,wish,updated_at').order('updated_at',{ascending:false}).limit(1000);if(e)throw e;
    const ids=[...new Set((data||[]).map(x=>x.invitation_id))];const {data:invs,error:ie}=ids.length?await db.from('invitations').select('id,data').in('id',ids):{data:[],error:null};if(ie)throw ie;
-   const lookup=new Map((invs||[]).map(x=>[x.id,(x.data?.couple1||'')+' & '+(x.data?.couple2||'')]));
+   const lookup=new Map((invs||[]).map(x=>[x.id,(x.data?.eventTitle ? `${x.data.eventTitle} — ${x.data.celebrant||''}` : `${x.data?.couple1||''} & ${x.data?.couple2||''}`)]));
    const rows=(data||[]).map(x=>({...x,couple:lookup.get(x.invitation_id)||x.invitation_id}));
    return response({items:rows,counts:{hadir:rows.filter(x=>x.attendance==='hadir').length,tidak:rows.filter(x=>x.attendance==='tidak').length,ragu:rows.filter(x=>x.attendance==='ragu').length,people:rows.reduce((s,x)=>s+x.party_size,0)},truncated:rows.length===1000});
   }
@@ -33,7 +33,7 @@ export async function GET(req){
    db.from('orders').select('id,invitation_id,amount,status,payment_method,created_at,submitted_at,reviewed_at').order('created_at',{ascending:false}).limit(limit)
   ]);
   if(a.error)throw a.error;if(b.error)throw b.error;
-  const invitations=(a.data||[]).map(({data,...x})=>({...x,couple1:String(data?.couple1||''),couple2:String(data?.couple2||''),eventDate:String(data?.date||'')}));
+  const invitations=(a.data||[]).map(({data,...x})=>({...x,couple1:String(data?.couple1||''),couple2:String(data?.couple2||''),eventTitle:String(data?.eventTitle||''),celebrant:String(data?.celebrant||''),eventDate:String(data?.date||'')}));
   const orders=b.data||[],byInvite=new Map(invitations.map(x=>[x.id,x]));
   const detailed=orders.map(o=>({...o,invitation:byInvite.get(o.invitation_id)||null}));
   if(tab==='orders')return response({orders:detailed,hasMore:orders.length===limit});
