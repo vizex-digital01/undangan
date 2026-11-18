@@ -12,3 +12,71 @@
 @media(max-height:650px){.v15-entry-inner{gap:7px}.v15-entry-ring{width:119px;height:135px}.v15-entry h1{font-size:31px}.v15-entry .v15-to{font-size:11px}.v15-entry .v15-main-button{margin-top:2px}.v15-page-area{inset-bottom:74px}.v15-panel{justify-content:flex-start;padding-top:40px}.v15-panel-opening{justify-content:center}.v15-cover-medallion{width:112px;height:133px}.v15-panel-opening h2{font-size:31px}.v15-countdown strong{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.v15-shell *, .v15-shell *::before,.v15-shell *::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 @keyframes v15appear{from{opacity:0;transform:translateY(22px) scale(.97);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}@keyframes v15exit{to{opacity:0;transform:scale(.9);filter:blur(13px)}}@keyframes v15curtainL{0%{opacity:0;transform:translateX(-110%)}35%{opacity:.94;transform:translateX(0)}60%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(-110%)}}@keyframes v15curtainR{0%{opacity:0;transform:translateX(110%)}35%{opacity:.94;transform:translateX(0)}60%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(110%)}}@keyframes v15page{from{opacity:0;transform:translateY(26px) scale(.97);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}@keyframes v15mist{to{transform:translate(30px,-16px)}}@keyframes v15float{50%{transform:translateY(-15px) rotate(12deg)}}@keyframes v15breathe{50%{transform:translateY(-6px);box-shadow:0 0 0 7px #fff5,0 0 0 8px var(--edge),0 12px 25px #0003}}
+
+/* VIZEX v21 — licensed artwork compositions + motion systems.  Local images override temporary Magnific URLs when available. */
+
+.v15-shell.v21-v-batik{--paper:#08172b;--ink:#edd7a5;--edge:#cfa965;--nav:#102b48;--btn:#cfa965;--btnInk:#172437;--outside:#162c49;}
+.v15-shell.v21-v-batik .v15-paper{background-color:#08172b;background-image:url('/themes/v21/batik.webp'),url('https://pikaso.cdnpk.net/private/production/6085184760/render.png?token=exp=1795219200~hmac=ad193fa7b15827895aebbc8eef6a05b5886f334b8ffb56cc406b8304d5a6be79'),url('/themes/batik-blue.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-batik{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/batik.webp'),url('https://pikaso.cdnpk.net/private/production/6085184760/render.png?token=exp=1795219200~hmac=ad193fa7b15827895aebbc8eef6a05b5886f334b8ffb56cc406b8304d5a6be79'),url('/themes/batik-blue.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-floral{--paper:#faf5eb;--ink:#76594f;--edge:#bc978a;--nav:#faf0e9;--btn:#a47776;--btnInk:#ffffff;--outside:#f2e9e5;}
+.v15-shell.v21-v-floral .v15-paper{background-color:#faf5eb;background-image:url('/themes/v21/floral.webp'),url('https://pikaso.cdnpk.net/private/production/6085185143/render.png?token=exp=1795219200~hmac=795f382ada35b860a62c8f7de0bd5d960e63d9cd4aac4a78d1ca6823df4897f1'),url('/themes/cream-flowers.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-floral{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/floral.webp'),url('https://pikaso.cdnpk.net/private/production/6085185143/render.png?token=exp=1795219200~hmac=795f382ada35b860a62c8f7de0bd5d960e63d9cd4aac4a78d1ca6823df4897f1'),url('/themes/cream-flowers.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-landscape{--paper:#edf2e6;--ink:#426c58;--edge:#89a68d;--nav:#dceae0;--btn:#48785e;--btnInk:#ffffff;--outside:#cdded5;}
+.v15-shell.v21-v-landscape .v15-paper{background-color:#edf2e6;background-image:url('/themes/v21/landscape.webp'),url('https://pikaso.cdnpk.net/private/production/6085185425/render.png?token=exp=1795219200~hmac=f812f1b62668dc25fd8b7b3c2eb81c93f5d92fd73297085f4d88c6dbe832bd78'),url('/themes/green-landscape.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-landscape{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/landscape.webp'),url('https://pikaso.cdnpk.net/private/production/6085185425/render.png?token=exp=1795219200~hmac=f812f1b62668dc25fd8b7b3c2eb81c93f5d92fd73297085f4d88c6dbe832bd78'),url('/themes/green-landscape.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-islamic{--paper:#eee1bf;--ink:#664f32;--edge:#ae8b51;--nav:#e9dfc5;--btn:#3b6453;--btnInk:#ffffff;--outside:#c9dbc7;}
+.v15-shell.v21-v-islamic .v15-paper{background-color:#eee1bf;background-image:url('/themes/v21/islamic.webp'),url('https://pikaso.cdnpk.net/private/production/6085185905/render.png?token=exp=1795219200~hmac=f2aa3ea8249afc728d6836065aa56464adcd4476469246ac9d0bd294cde0e029'),url('/ornaments/emerald-arabesque-arch.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-islamic{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/islamic.webp'),url('https://pikaso.cdnpk.net/private/production/6085185905/render.png?token=exp=1795219200~hmac=f2aa3ea8249afc728d6836065aa56464adcd4476469246ac9d0bd294cde0e029'),url('/ornaments/emerald-arabesque-arch.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-birthday{--paper:#f6e4f0;--ink:#735078;--edge:#c19bc1;--nav:#f4deed;--btn:#9d6ca5;--btnInk:#ffffff;--outside:#e5d5f2;}
+.v15-shell.v21-v-birthday .v15-paper{background-color:#f6e4f0;background-image:url('/themes/v21/birthday.webp'),url('https://pikaso.cdnpk.net/private/production/6085186151/render.png?token=exp=1795219200~hmac=189b6e28ccc11b2bab237e06c6a7526e5984152fc439e9d62664b0bd722536d0'),url('/ornaments/birthday-confetti.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-birthday{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/birthday.webp'),url('https://pikaso.cdnpk.net/private/production/6085186151/render.png?token=exp=1795219200~hmac=189b6e28ccc11b2bab237e06c6a7526e5984152fc439e9d62664b0bd722536d0'),url('/ornaments/birthday-confetti.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-graduation{--paper:#071c34;--ink:#ecd9a8;--edge:#c4a05c;--nav:#112946;--btn:#d5b675;--btnInk:#172437;--outside:#d7deea;}
+.v15-shell.v21-v-graduation .v15-paper{background-color:#071c34;background-image:url('/themes/v21/graduation.webp'),url('https://pikaso.cdnpk.net/private/production/6085186647/render.png?token=exp=1795219200~hmac=0bfe1c38057f5fc662a33f5c4a7f40584a17ee74c2cc0977b70d54ea2e005e90'),url('/ornaments/graduation-laurel.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-graduation{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/graduation.webp'),url('https://pikaso.cdnpk.net/private/production/6085186647/render.png?token=exp=1795219200~hmac=0bfe1c38057f5fc662a33f5c4a7f40584a17ee74c2cc0977b70d54ea2e005e90'),url('/ornaments/graduation-laurel.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-royal{--paper:#f2ead8;--ink:#705437;--edge:#bfa16a;--nav:#f6ecd9;--btn:#816544;--btnInk:#ffffff;--outside:#e8e0d1;}
+.v15-shell.v21-v-royal .v15-paper{background-color:#f2ead8;background-image:url('/themes/v21/royal.webp'),url('https://pikaso.cdnpk.net/private/production/6085187597/render.png?token=exp=1795219200~hmac=a799ced1f1dfe24c30c98eb90d4e56854dd76d49c9ca32c43ab1083bdb2943e3'),url('/themes/cream-flowers.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-royal{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/royal.webp'),url('https://pikaso.cdnpk.net/private/production/6085187597/render.png?token=exp=1795219200~hmac=a799ced1f1dfe24c30c98eb90d4e56854dd76d49c9ca32c43ab1083bdb2943e3'),url('/themes/cream-flowers.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+.v15-shell.v21-v-evergreen{--paper:#0c2d26;--ink:#f2dfb2;--edge:#c3a46c;--nav:#1b4038;--btn:#d3b67a;--btnInk:#172437;--outside:#d4e3da;}
+.v15-shell.v21-v-evergreen .v15-paper{background-color:#0c2d26;background-image:url('/themes/v21/evergreen.webp'),url('https://pikaso.cdnpk.net/private/production/6085188197/render.png?token=exp=1795219200~hmac=12af1e4a3a8f2c7ce06a2e95fa29b82f6d90b64a92f4912221d8a1af24e34161'),url('/ornaments/evergreen-garland.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+.v21-thumb.v21-v-evergreen{background-image:linear-gradient(90deg,#0000000c,#0000000c),url('/themes/v21/evergreen.webp'),url('https://pikaso.cdnpk.net/private/production/6085188197/render.png?token=exp=1795219200~hmac=12af1e4a3a8f2c7ce06a2e95fa29b82f6d90b64a92f4912221d8a1af24e34161'),url('/ornaments/evergreen-garland.svg');background-position:center;background-size:cover;background-repeat:no-repeat;}
+
+
+/* Intentional depth: artwork sits below content; decorative motion never blocks buttons or forms. */
+.v15-shell[class*="v21-v-"] .v15-stage::before,.v15-shell[class*="v21-v-"] .v15-stage::after{content:"";position:absolute;inset:-10%;pointer-events:none;z-index:0;opacity:.26;will-change:transform;transform:translate3d(0,0,0)}
+.v15-shell.v21-v-batik .v15-stage::before{background:url('/ornaments/batik-keraton-gold.svg') no-repeat 0% 0%/44%;animation:v21-royal-drift 18s ease-in-out infinite alternate}
+.v15-shell.v21-v-floral .v15-stage::before{background:url('/ornaments/peony-cream-blush.svg') no-repeat 110% 10%/44%;animation:v21-flowers 16s ease-in-out infinite alternate}
+.v15-shell.v21-v-landscape .v15-stage::before{background:url('/ornaments/sage-floating-vines.svg') no-repeat 110% -5%/48%;animation:v21-fog 22s ease-in-out infinite alternate}
+.v15-shell.v21-v-islamic .v15-stage::before{background:url('/ornaments/emerald-arabesque-arch.svg') no-repeat center 15%/65%;opacity:.12;animation:v21-light 12s ease-in-out infinite alternate}
+.v15-shell.v21-v-birthday .v15-stage::before{background:url('/ornaments/birthday-confetti.svg') no-repeat center 10%/70%;animation:v21-confetti 15s ease-in-out infinite alternate}
+.v15-shell.v21-v-graduation .v15-stage::before,.v15-shell.v21-v-royal .v15-stage::before{background:url('/ornaments/golden-sparkles.svg') no-repeat right top/65%;animation:v21-light 12s linear infinite alternate}
+.v15-shell.v21-v-evergreen .v15-stage::before{background:url('/ornaments/evergreen-garland.svg') no-repeat top center/85%;opacity:.18;animation:v21-royal-drift 15s ease-in-out infinite alternate}
+.v15-shell[class*="v21-v-"] .v15-stage::after{inset:0;background:radial-gradient(ellipse at 50% 35%,transparent 46%,rgba(255,255,255,.06) 92%);opacity:.4;animation:v21-light 13s ease-in-out infinite alternate}
+.v15-shell[class*="v21-v-"] .v15-entry-inner{position:relative;isolation:isolate}
+.v15-shell[class*="v21-v-"] .v15-entry-inner::before{content:"";position:absolute;inset:-18px -12px;border:1px solid var(--edge);border-radius:44% 44% 16px 16px;opacity:.34;z-index:-1;pointer-events:none;animation:v21-border 4.5s ease-out both}
+.v15-shell[class*="v21-v-"] .v15-panel{position:relative;isolation:isolate}
+.v15-shell[class*="v21-v-"] .v15-panel:not(.v15-panel-opening)::before{content:"";position:absolute;inset:5% 5%;z-index:-1;border:1px solid var(--edge);border-radius:120px 120px 16px 16px;opacity:.23;pointer-events:none}
+.v15-shell.v21-v-batik .v15-panel:not(.v15-panel-opening)::before,.v15-shell.v21-v-graduation .v15-panel:not(.v15-panel-opening)::before{opacity:.38}
+.v15-shell[class*="v21-v-"] .v15-bottom-nav{backdrop-filter:blur(16px)}
+.v21-thumb .mini-page{background:color-mix(in srgb,var(--v18-accent) 20%,white 70%);backdrop-filter:blur(5px);box-shadow:0 6px 18px #0002}
+.v21-thumb .mini-center{transform:translateY(-5px);box-shadow:0 9px 26px #0003}
+@keyframes v21-royal-drift{0%{transform:translate(-12px,-15px) rotate(-2deg)}100%{transform:translate(12px,10px) rotate(3deg)}}
+@keyframes v21-flowers{0%{transform:translate(0,0) rotate(-4deg) scale(.97)}100%{transform:translate(-17px,16px) rotate(5deg) scale(1.06)}}
+@keyframes v21-fog{0%{transform:translate(-25px,0) scale(1)}100%{transform:translate(18px,-24px) scale(1.09)}}
+@keyframes v21-confetti{0%{transform:translateY(-16px) rotate(-4deg)}100%{transform:translateY(28px) rotate(8deg)}}
+@keyframes v21-light{0%{opacity:.11;transform:scale(.98)}100%{opacity:.38;transform:scale(1.035)}}
+@keyframes v21-border{0%{opacity:0;transform:scale(1.1)}100%{opacity:.34;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.v15-shell[class*="v21-v-"] .v15-stage::before,.v15-shell[class*="v21-v-"] .v15-stage::after,.v15-shell[class*="v21-v-"] .v15-entry-inner::before{animation:none!important;transform:none!important}}

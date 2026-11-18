@@ -1,3 +1,4 @@
+import {visualForTemplate} from '@/lib/theme-artwork';
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {resolveMusic} from '@/lib/music';
@@ -166,7 +167,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
    setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.');
   }catch(error){setRsvpStatus(error.message)}finally{setBusy(false)}
  };
- return <div className={`v15-shell v16-shell v17-shell v19-shell v15-style-${type} v15-theme-${theme}`} data-visual={type} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v15-style-${type} v15-theme-${theme} v21-v-${visualForTemplate(template)}`} data-visual={type} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label="Undangan digital VIZEX">
    <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>

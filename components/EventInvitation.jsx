@@ -1,3 +1,4 @@
+import {visualForTemplate} from '@/lib/theme-artwork';
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {eventInfo} from '@/lib/catalog';
@@ -34,7 +35,7 @@ export default function EventInvitation({data={},template,preview=false,invitati
  const reset=()=>{clearTimeout(timerRef.current);setOpened(false);setOpening(false);setProgress(0);setActive('opening');if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0}setPlaying(false)};
  const copy=async value=>{try{await navigator.clipboard.writeText(value);setCopyMsg('Tersalin')}catch{setCopyMsg('Salin manual dari halaman')}setTimeout(()=>setCopyMsg(''),2200)};
  async function sendRsvp(e){e.preventDefault();if(preview||!invitationId){setFeedback('Preview saja. RSVP dapat dikirim pada undangan yang sudah diterbitkan.');return}if(!rsvp.name.trim()){setFeedback('Nama tamu wajib diisi');return}setBusy(true);try{const res=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...rsvp,invitationId})});const body=await res.json();if(!res.ok)throw new Error(body.error||'Gagal mengirim RSVP');setFeedback(body.message||'Konfirmasi berhasil dikirim')}catch(err){setFeedback(err.message)}finally{setBusy(false)}}
- return <div className={`v15-shell v16-shell v17-shell v19-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'}`} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'} v21-v-${visualForTemplate(template)}`} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label={`Undangan ${meta.label}`}>
    <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>
