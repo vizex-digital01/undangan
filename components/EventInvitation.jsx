@@ -1,5 +1,6 @@
 'use client';
-import {visualForTemplate} from '@/lib/theme-artwork';
+import {visualForTemplate,layoutForTemplate,visualThemes} from '@/lib/theme-artwork';
+import {premiumArtSlug} from '@/lib/premium-v24';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {eventInfo} from '@/lib/catalog';
 import {resolveMusic} from '@/lib/music';
@@ -35,7 +36,7 @@ export default function EventInvitation({data={},template,preview=false,invitati
  const reset=()=>{clearTimeout(timerRef.current);setOpened(false);setOpening(false);setProgress(0);setActive('opening');if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0}setPlaying(false)};
  const copy=async value=>{try{await navigator.clipboard.writeText(value);setCopyMsg('Tersalin')}catch{setCopyMsg('Salin manual dari halaman')}setTimeout(()=>setCopyMsg(''),2200)};
  async function sendRsvp(e){e.preventDefault();if(preview||!invitationId){setFeedback('Preview saja. RSVP dapat dikirim pada undangan yang sudah diterbitkan.');return}if(!rsvp.name.trim()){setFeedback('Nama tamu wajib diisi');return}setBusy(true);try{const res=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...rsvp,invitationId})});const body=await res.json();if(!res.ok)throw new Error(body.error||'Gagal mengirim RSVP');setFeedback(body.message||'Konfirmasi berhasil dikirim')}catch(err){setFeedback(err.message)}finally{setBusy(false)}}
- return <div className={`v15-shell v16-shell v17-shell v19-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'} v21-v-${visualForTemplate(template)}`} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'} v22-v-${visualForTemplate(template)} v23-v-${visualForTemplate(template)} v23-l-${layoutForTemplate(template)} ${premiumArtSlug(template)?`v24-premium v24-art-${premiumArtSlug(template)}`:''}`} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label={`Undangan ${meta.label}`}>
    <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>
@@ -44,7 +45,7 @@ export default function EventInvitation({data={},template,preview=false,invitati
    <div className="v17-corner-frame" aria-hidden="true"><span className="v17-corner v17-tl">❦</span><span className="v17-corner v17-tr">❧</span><span className="v17-corner v17-bl">❧</span><span className="v17-corner v17-br">❦</span></div>
    <div className="v17-ambient" aria-hidden="true"><span/><span/><span/><span/><span/><span/><span/><span/></div>
    {!opened?<div className={`v15-entry ${opening?'v15-entry-opening':''}`}><div className="v15-entry-inner">
-     <span className="v15-smallcap">{meta.label.toUpperCase()}</span><div className="v15-entry-ring"><div className="v15-entry-symbol">{cover?<img src={cover} alt="Foto sampul"/>:<span>{kind==='birthday'?'✳':kind==='graduation'?'✦':'❦'}</span>}</div></div>
+     <span className="v15-smallcap">{meta.label.toUpperCase()}</span><div className="v15-entry-ring"><div className="v15-entry-symbol">{cover?<img src={cover} alt="Foto sampul"/>:<span>{visualThemes[visualForTemplate(template)]?.icon||'✦'}</span>}</div></div>
      <h1>{name}</h1><p>{title}</p><div className="v15-divider">✦</div><p className="v15-to">Kepada Yth.<br/><strong>{data.guest||'Tamu Undangan'}</strong></p>
      <button type="button" className="v15-main-button" onClick={open} disabled={opening}>{opening?'Membuka undangan…':'✉ Buka Undangan'}</button><small className="v17-open-hint">Musik dan animasi dimulai setelah dibuka</small>
     </div><div className="v15-curtain v15-curtain-left"/><div className="v15-curtain v15-curtain-right"/></div>:<>
