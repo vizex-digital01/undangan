@@ -1,7 +1,7 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {resolveMusic} from '@/lib/music';
-import {normalizeAnimation} from '@/lib/animation-config';
+import {animationForTemplate} from '@/lib/animation-config';
 import AnimationOverlay from '@/components/AnimationOverlay';
 import EventInvitation from '@/components/EventInvitation';
 
@@ -63,7 +63,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
  const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[];
  const cover=photos[0]||null;
  const music=resolveMusic(data.musicTrack||'auto',template);
- const anim=normalizeAnimation(template?.animationConfig);
+ const anim=animationForTemplate(template);
  const type=themeClass(template);
  const theme=template?.theme||'ivory';
  const contact=digits(data.rsvpPhone);

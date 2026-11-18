@@ -1,7 +1,7 @@
 import {authorized,audit} from '@/lib/admin-v13';
 import {response,fail} from '@/lib/server';
 import {templates} from '@/lib/catalog';
-import {DEFAULT_ANIMATION,normalizeAnimation} from '@/lib/animation-config';
+import {normalizeAnimation,initialAnimationForTemplate} from '@/lib/animation-config';
 export const dynamic='force-dynamic';
 export async function GET(req){
  try{
@@ -10,7 +10,7 @@ export async function GET(req){
   if(!templates.some(t=>t.id===id))return fail('Template tidak ditemukan',404);
   const {data,error}=await ctx.db.from('vizex_template_animations').select('config').eq('template_id',id).maybeSingle();
   if(error)throw error;
-  return response({config:normalizeAnimation(data?.config||DEFAULT_ANIMATION)});
+  return response({config:data?.config?normalizeAnimation(data.config):initialAnimationForTemplate(templates.find(t=>t.id===id))});
  }catch(err){console.error('Animation Studio GET',err);return fail('Gagal membuka studio. Pastikan migrasi v19 sudah dijalankan.',500)}
 }
 export async function POST(req){

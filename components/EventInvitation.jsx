@@ -2,7 +2,7 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {eventInfo} from '@/lib/catalog';
 import {resolveMusic} from '@/lib/music';
-import {normalizeAnimation} from '@/lib/animation-config';
+import {animationForTemplate} from '@/lib/animation-config';
 import AnimationOverlay from '@/components/AnimationOverlay';
 
 const sections=[['opening','Awal','✉'],['about','Tentang','✦'],['agenda','Agenda','◷'],['location','Lokasi','⌖'],['gallery','Galeri','▧'],['rsvp','RSVP','✓'],['ending','Penutup','♡']];
@@ -22,7 +22,7 @@ export default function EventInvitation({data={},template,preview=false,invitati
  const kind=template?.eventType||'birthday',meta=eventInfo[kind]||eventInfo.party;
  const title=data.eventTitle||meta.defaultTitle,name=data.celebrant||meta.celebrant,organizer=data.organizer||'Keluarga & Sahabat',subtitle=data.eventSubtitle||meta.subtitle;
  const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[],cover=photos[0]||null;
- const anim=normalizeAnimation(template?.animationConfig);
+ const anim=animationForTemplate(template);
  const music=resolveMusic(data.musicTrack||'auto',template);
  const jump=useCallback(id=>{const pane=scrollRef.current;const el=pane?.querySelector(`[data-section="${id}"]`);if(!pane||!el)return;pane.scrollTo({top:el.offsetTop-pane.offsetTop,behavior:'smooth'});setActive(id)},[]);
  useEffect(()=>{if(!opened||!scrollRef.current)return;const pane=scrollRef.current;const els=[...pane.querySelectorAll('.v16-reveal')];pane.querySelectorAll('.v16-section').forEach(sec=>sec.querySelectorAll('.v16-reveal').forEach((el,i)=>el.style.setProperty('--v17-order',Math.min(i,7))));const io=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v16-visible');io.unobserve(e.target)}}),{root:pane,threshold:.13,rootMargin:'0px 0px 9% 0px'}):null;els.forEach(el=>io?io.observe(el):el.classList.add('v16-visible'));

@@ -300,3 +300,18 @@
 .v19-shell .v16-section[data-v19-effect=zoom] .v16-reveal:not(.v16-visible){transform:scale(.7)!important}
 .v19-shell .v16-section[data-v19-effect=rotate] .v16-reveal:not(.v16-visible){transform:rotate(-12deg) scale(.88)!important}
 .v19-shell .v16-section[data-v19-effect=none] .v16-reveal{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
+
+/* v20 — Curated ornaments library */
+.v20-preset-button{width:100%;padding:12px 15px;margin:4px 0 16px;border:0;border-radius:12px;background:linear-gradient(110deg,#294538,#4e715a);color:#fff9ee;font-weight:700;cursor:pointer;box-shadow:0 8px 22px #223c2d21}
+.v20-ornament-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:4px 0 23px}
+.v20-ornament-card{min-width:0;border:1px solid #e5dfd2;border-radius:12px;background:#faf8f4;padding:8px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:space-between}
+.v20-ornament-thumbnail{height:94px;width:100%;display:grid;place-items:center;border-radius:8px;background:radial-gradient(circle at 20% 20%,#ffffff,#efe9dd)}
+.v20-ornament-thumbnail img{max-height:88px;max-width:100%;width:auto;height:auto;object-fit:contain}
+.v20-ornament-card b{font-size:11px;line-height:1.3;text-align:center;min-height:29px}
+.v20-ornament-card button{border-radius:7px;border:1px solid #c6b28f;background:#fff7e9;color:#385043;font-size:10px;font-weight:700;width:100%;padding:9px 2px;cursor:pointer}
+.v20-ornament-card button:disabled{opacity:.5;cursor:not-allowed}
+.v19-shell .v19-ornaments{z-index:8!important;contain:layout style;}
+.v19-shell .v19-ornament img{display:block;width:100%;height:auto;max-height:none;object-fit:contain}
+.v19-shell .v19-ornament{pointer-events:none;transform-origin:center}
+.v19-position-item:has(img){border-radius:10px;background:#ffffffc5}
+@media(max-width:600px){.v20-ornament-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.v20-ornament-thumbnail{height:90px}}
