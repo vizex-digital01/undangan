@@ -1,6 +1,7 @@
 import {admin,response,fail,slugify} from '@/lib/server';
 import {visitor,createVisitor,attachCookie,sameOrigin} from '@/lib/guest';
-import {starterData,templateById} from '@/lib/catalog';
+import {starterData} from '@/lib/catalog';
+import {guardTemplate} from '@/lib/admin-v13';
 export async function GET(req){try{
  const guest=await visitor(req);if(!guest)return response({items:[]});
  const {data,error}=await admin().from('invitations').select('id,slug,template_id,status,created_at,data').eq('guest_id',guest.guestId).order('created_at',{ascending:false});
@@ -8,7 +9,7 @@ export async function GET(req){try{
 }catch{return fail('Gagal memuat draft',500)}}
 export async function POST(req){try{
  if(!sameOrigin(req))return fail('Origin tidak diizinkan',403);
- const body=await req.json();const template=templateById(body.template_id);if(!template)return fail('Template tidak valid');
+ const body=await req.json();const template=await guardTemplate(admin(),body.template_id);if(!template)return fail('Template tidak valid');
  let guest=await visitor(req),token=null;
  if(!guest){guest=await createVisitor();token=guest.token;}
  const id=crypto.randomUUID(),slug=slugify('undangan-'+id.slice(0,8));

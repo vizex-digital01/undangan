@@ -1,5 +1,6 @@
 import {admin,response,fail} from '@/lib/server';
 import {visitor,sameOrigin} from '@/lib/guest';
+import {notify} from '@/lib/admin-v13';
 export async function POST(req){try{
  if(!sameOrigin(req))return fail('Origin tidak diizinkan',403);
  const guest=await visitor(req);if(!guest)return fail('Sesi tidak tersedia',401);
@@ -13,5 +14,6 @@ export async function POST(req){try{
  const {error:up}=await db.storage.from('payment-proofs').upload(path,file,{contentType:file.type,upsert:false});if(up)throw up;
  const {data:updated,error}=await db.from('orders').update({proof_path:path,status:'submitted',submitted_at:new Date().toISOString()}).eq('id',id).eq('guest_id',guest.guestId).eq('status','pending').select('id').maybeSingle();
  if(error||!updated){await db.storage.from('payment-proofs').remove([path]);return fail('Bukti sudah pernah dikirim',409)}
+ await notify(db,'payment','Bukti pembayaran baru',id,'Ada transfer SeaBank menunggu verifikasi.');
  return response({ok:true,status:'submitted'});
 }catch{return fail('Upload bukti gagal',500)}}

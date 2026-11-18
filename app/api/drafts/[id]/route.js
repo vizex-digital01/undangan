@@ -18,7 +18,10 @@ export async function PATCH(req,{params}){try{
  const {id}=await params,x=await find(req,id);if(!x?.data)return fail('Draft tidak ditemukan',404);
  const input=await req.json(),updates={...x.data.data};
  for(const f of fields)if(typeof input[f]==='string')updates[f]=input[f].slice(0,f==='story'?1200:300);
- const {error}=await admin().from('invitations').update({data:updates,updated_at:new Date().toISOString()}).eq('id',id).eq('guest_id',x.guest.guestId);
+ const customerName=typeof input.customerName==='string'?input.customerName.trim().slice(0,100):x.data.customer_name;
+ const customerWhatsapp=typeof input.customerWhatsapp==='string'?input.customerWhatsapp.trim().slice(0,20):x.data.customer_whatsapp;
+ if(customerWhatsapp&&!/^\+?[0-9]{8,16}$/.test(customerWhatsapp))return fail('Nomor WhatsApp tidak valid');
+ const {error}=await admin().from('invitations').update({customer_name:customerName,customer_whatsapp:customerWhatsapp,data:updates,updated_at:new Date().toISOString()}).eq('id',id).eq('guest_id',x.guest.guestId);
  if(error)throw error;return response({ok:true});
 }catch{return fail('Gagal menyimpan',500)}}
 export async function DELETE(req,{params}){try{

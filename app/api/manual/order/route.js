@@ -1,6 +1,7 @@
 import {admin,response,fail} from '@/lib/server';
 import {visitor,sameOrigin,validId} from '@/lib/guest';
 import {cost,bank,safeMessage} from '@/lib/manual';
+import {guardTemplate} from '@/lib/admin-v13';
 export async function POST(req){try{
  if(!sameOrigin(req))return fail('Origin tidak diizinkan',403);
  const guest=await visitor(req);if(!guest)return fail('Sesi tidak tersedia',401);
@@ -8,6 +9,7 @@ export async function POST(req){try{
  const db=admin(),{data:inv,error:invErr}=await db.from('invitations').select('id,guest_id,status,slug,template_id').eq('id',id).eq('guest_id',guest.guestId).maybeSingle();
  if(invErr)throw invErr;if(!inv)return fail('Undangan tidak ditemukan',404);
  if(inv.status==='published')return response({published:true,url:'/invite/'+inv.slug});
+ if(!await guardTemplate(db,inv.template_id))return fail('Template ini tidak lagi tersedia',409);
  const account=bank(),amount=cost(inv);
  const {data:existing,error:findErr}=await db.from('orders').select('id,status,amount,proof_path').eq('invitation_id',id).eq('guest_id',guest.guestId).eq('payment_method','seabank_manual').in('status',['pending','submitted']).order('created_at',{ascending:false}).limit(1);
  if(findErr)throw findErr;let order=existing?.[0];
