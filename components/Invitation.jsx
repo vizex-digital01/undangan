@@ -1,6 +1,8 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {resolveMusic} from '@/lib/music';
+import {normalizeAnimation} from '@/lib/animation-config';
+import AnimationOverlay from '@/components/AnimationOverlay';
 import EventInvitation from '@/components/EventInvitation';
 
 const SECTIONS=[
@@ -61,6 +63,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
  const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[];
  const cover=photos[0]||null;
  const music=resolveMusic(data.musicTrack||'auto',template);
+ const anim=normalizeAnimation(template?.animationConfig);
  const type=themeClass(template);
  const theme=template?.theme||'ivory';
  const contact=digits(data.rsvpPhone);
@@ -127,13 +130,14 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
  },[music?.file]);
  useEffect(()=>()=>{clearTimeout(animationRef.current);if(audioRef.current)audioRef.current.pause()},[]);
 
+ useEffect(()=>{if(!opened||!scrollRef.current)return;scrollRef.current.querySelectorAll('.v16-section').forEach(section=>{section.dataset.v19Effect=anim.sections?.[section.dataset.section]||anim.scroll.effect;});},[opened,template?.animationConfig]);
  const openInvitation=()=>{
   if(opened||opening)return;
   setOpening(true);
   // This click is a user gesture: browsers normally permit starting music here.
   const audio=audioRef.current;
   if(audio){audio.volume=.23;audio.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false));}
-  animationRef.current=setTimeout(()=>{setOpened(true);setOpening(false)},1050);
+  animationRef.current=setTimeout(()=>{setOpened(true);setOpening(false)},anim.cover.duration);
  };
  const toggleMusic=()=>{
   const audio=audioRef.current;if(!audio)return;
@@ -162,9 +166,10 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
    setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.');
   }catch(error){setRsvpStatus(error.message)}finally{setBusy(false)}
  };
- return <div className={`v15-shell v16-shell v17-shell v15-style-${type} v15-theme-${theme}`} data-visual={type}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v15-style-${type} v15-theme-${theme}`} data-visual={type} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label="Undangan digital VIZEX">
+   <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>
    <div className="v15-paper" aria-hidden="true"/>
    <div className="v15-mist" aria-hidden="true"/>
    <div className="v15-floaters" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>

@@ -2,6 +2,8 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {eventInfo} from '@/lib/catalog';
 import {resolveMusic} from '@/lib/music';
+import {normalizeAnimation} from '@/lib/animation-config';
+import AnimationOverlay from '@/components/AnimationOverlay';
 
 const sections=[['opening','Awal','✉'],['about','Tentang','✦'],['agenda','Agenda','◷'],['location','Lokasi','⌖'],['gallery','Galeri','▧'],['rsvp','RSVP','✓'],['ending','Penutup','♡']];
 const formatDate=(value,weekday=false)=>{if(!value)return 'Tanggal acara';const d=new Date(`${value}T12:00:00`);return Number.isNaN(d.getTime())?'Tanggal acara':new Intl.DateTimeFormat('id-ID',weekday?{weekday:'long',day:'numeric',month:'long',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'}).format(d)};
@@ -20,19 +22,22 @@ export default function EventInvitation({data={},template,preview=false,invitati
  const kind=template?.eventType||'birthday',meta=eventInfo[kind]||eventInfo.party;
  const title=data.eventTitle||meta.defaultTitle,name=data.celebrant||meta.celebrant,organizer=data.organizer||'Keluarga & Sahabat',subtitle=data.eventSubtitle||meta.subtitle;
  const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[],cover=photos[0]||null;
+ const anim=normalizeAnimation(template?.animationConfig);
  const music=resolveMusic(data.musicTrack||'auto',template);
  const jump=useCallback(id=>{const pane=scrollRef.current;const el=pane?.querySelector(`[data-section="${id}"]`);if(!pane||!el)return;pane.scrollTo({top:el.offsetTop-pane.offsetTop,behavior:'smooth'});setActive(id)},[]);
  useEffect(()=>{if(!opened||!scrollRef.current)return;const pane=scrollRef.current;const els=[...pane.querySelectorAll('.v16-reveal')];pane.querySelectorAll('.v16-section').forEach(sec=>sec.querySelectorAll('.v16-reveal').forEach((el,i)=>el.style.setProperty('--v17-order',Math.min(i,7))));const io=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v16-visible');io.unobserve(e.target)}}),{root:pane,threshold:.13,rootMargin:'0px 0px 9% 0px'}):null;els.forEach(el=>io?io.observe(el):el.classList.add('v16-visible'));
  let frame=0;const onScroll=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;const max=pane.scrollHeight-pane.clientHeight,ratio=max>0?pane.scrollTop/max:0;setProgress(ratio);const marker=pane.scrollTop+pane.clientHeight*.42;let selected=sections[0][0];pane.querySelectorAll('[data-section]').forEach(s=>{if(s.offsetTop-pane.offsetTop<=marker)selected=s.dataset.section});setActive(selected);pane.parentElement?.style.setProperty('--scroll-shift',`${Math.round(ratio*48)}px`)})};pane.addEventListener('scroll',onScroll,{passive:true});onScroll();return()=>{io?.disconnect();pane.removeEventListener('scroll',onScroll);cancelAnimationFrame(frame)}},[opened]);
  useEffect(()=>()=>{clearTimeout(timerRef.current);audioRef.current?.pause()},[]);
- const open=()=>{if(opening||opened)return;setOpening(true);if(audioRef.current){audioRef.current.volume=.23;audioRef.current.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false))}timerRef.current=setTimeout(()=>{setOpening(false);setOpened(true)},980)};
+ useEffect(()=>{if(!opened||!scrollRef.current)return;scrollRef.current.querySelectorAll('.v16-section').forEach(section=>{section.dataset.v19Effect=anim.sections?.[section.dataset.section]||anim.scroll.effect;});},[opened,template?.animationConfig]);
+ const open=()=>{if(opening||opened)return;setOpening(true);if(audioRef.current){audioRef.current.volume=.23;audioRef.current.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false))}timerRef.current=setTimeout(()=>{setOpening(false);setOpened(true)},anim.cover.duration)};
  const toggle=()=>{const a=audioRef.current;if(!a)return;if(a.paused)a.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false));else{a.pause();setPlaying(false)}};
  const reset=()=>{clearTimeout(timerRef.current);setOpened(false);setOpening(false);setProgress(0);setActive('opening');if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0}setPlaying(false)};
  const copy=async value=>{try{await navigator.clipboard.writeText(value);setCopyMsg('Tersalin')}catch{setCopyMsg('Salin manual dari halaman')}setTimeout(()=>setCopyMsg(''),2200)};
  async function sendRsvp(e){e.preventDefault();if(preview||!invitationId){setFeedback('Preview saja. RSVP dapat dikirim pada undangan yang sudah diterbitkan.');return}if(!rsvp.name.trim()){setFeedback('Nama tamu wajib diisi');return}setBusy(true);try{const res=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...rsvp,invitationId})});const body=await res.json();if(!res.ok)throw new Error(body.error||'Gagal mengirim RSVP');setFeedback(body.message||'Konfirmasi berhasil dikirim')}catch(err){setFeedback(err.message)}finally{setBusy(false)}}
- return <div className={`v15-shell v16-shell v17-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'}`}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v18-event v18-${kind} v18-theme-${template?.theme||'default'}`} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label={`Undangan ${meta.label}`}>
+   <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>
    <div className="v15-paper" aria-hidden="true"/><div className="v15-mist" aria-hidden="true"/>
    <div className="v15-floaters" aria-hidden="true"><span>✧</span><span>❧</span><span>✦</span></div>
    <div className="v17-corner-frame" aria-hidden="true"><span className="v17-corner v17-tl">❦</span><span className="v17-corner v17-tr">❧</span><span className="v17-corner v17-bl">❧</span><span className="v17-corner v17-br">❦</span></div>
