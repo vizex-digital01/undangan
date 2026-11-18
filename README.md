@@ -77,3 +77,15 @@ Aplikasi Next.js App Router untuk website jasa undangan digital: katalog, editor
 6. Kembali ke dashboard dan cek draft tampil. Tombol publikasi harus tetap terkunci.
 
 **Perhatian:** GitHub/Vercel tidak memerlukan menjalankan ulang `schema.sql` untuk perubahan v8. Build lengkap dan integrasi layanan nyata masih perlu diuji setelah deployment.
+
+
+## VIZEX v10: Tanpa akun pelanggan
+
+- Jalankan `supabase/guest_checkout_migration.sql` **sekali** setelah migrasi v9.
+- Pelanggan langsung memilih template → membuat draft → upload foto → transfer SeaBank → menunggu admin. Tidak perlu login.
+- Sesi tamu dilindungi cookie HttpOnly 30 hari dan token acak yang hash-nya tersimpan di Supabase. Draft dapat diakses **hanya dari browser yang sama** selama cookie aktif. Jika cookie dihapus / pindah perangkat, pelanggan kehilangan akses ke draft, walau undangan publik yang sudah dibayar tetap berjalan. Untuk produksi jangka panjang tambahkan alur pemulihan via email/WhatsApp yang aman.
+- Admin tetap login melalui `/login`, lalu buka `/admin/payments`. UID admin di `VIZEX_ADMIN_USER_IDS` tetap diperlukan.
+- Pastikan env `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SEABANK_ACCOUNT_NUMBER`, `SEABANK_ACCOUNT_NAME`, `VIZEX_ADMIN_USER_IDS` tersedia di Vercel.
+- Migrasi v10 mengubah kolom `user_id` menjadi nullable; aturan RLS lama tetap aktif untuk akun lama. Token cookie baru tidak dikirim ke JavaScript di browser.
+- **Wajib uji sebelum live:** sesi berbeda tidak boleh melihat draft orang lain, browser privat tidak bisa membuka editor milik orang lain, pembayaran belum diverifikasi tidak bisa membuka `/invite/slug`, API review hanya dapat digunakan UID admin yang benar-benar login.
+- Simpan bukti transfer hanya di storage privat, cek mutasi SeaBank sebelum klik Setujui.
