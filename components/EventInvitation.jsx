@@ -1,5 +1,5 @@
-import {visualForTemplate} from '@/lib/theme-artwork';
 'use client';
+import {visualForTemplate} from '@/lib/theme-artwork';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {eventInfo} from '@/lib/catalog';
 import {resolveMusic} from '@/lib/music';
