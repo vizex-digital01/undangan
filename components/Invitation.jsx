@@ -77,6 +77,12 @@ export default function Invitation({data={},template,preview=false,invitationId=
   if(!opened||!scrollRef.current)return;
   const pane=scrollRef.current;
   const reveals=[...pane.querySelectorAll('.v16-reveal')];
+  // Stagger each visible section independently, so each new scroll area comes alive.
+  pane.querySelectorAll('.v16-section').forEach(section=>{
+   section.querySelectorAll('.v16-reveal').forEach((el,index)=>{
+    el.style.setProperty('--v17-order',Math.min(index,7));
+   });
+  });
   let observer;
   if(typeof IntersectionObserver!=='undefined'){
    observer=new IntersectionObserver((entries)=>{
@@ -100,6 +106,7 @@ export default function Invitation({data={},template,preview=false,invitationId=
     sections.forEach(section=>{if(section.offsetTop-pane.offsetTop<=marker)current=section});
     if(current)setActive(current.dataset.section);
     pane.parentElement?.style.setProperty('--scroll-shift',`${Math.round(ratio*48)}px`);
+    pane.parentElement?.style.setProperty('--v17-scroll',ratio.toFixed(3));
    });
   };
   pane.addEventListener('scroll',checkScroll,{passive:true});
@@ -154,12 +161,14 @@ export default function Invitation({data={},template,preview=false,invitationId=
    setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.');
   }catch(error){setRsvpStatus(error.message)}finally{setBusy(false)}
  };
- return <div className={`v15-shell v16-shell v15-style-${type} v15-theme-${theme}`}>
+ return <div className={`v15-shell v16-shell v17-shell v15-style-${type} v15-theme-${theme}`} data-visual={type}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label="Undangan digital VIZEX">
    <div className="v15-paper" aria-hidden="true"/>
    <div className="v15-mist" aria-hidden="true"/>
    <div className="v15-floaters" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
+   <div className="v17-corner-frame" aria-hidden="true"><span className="v17-corner v17-tl">❦</span><span className="v17-corner v17-tr">❧</span><span className="v17-corner v17-bl">❧</span><span className="v17-corner v17-br">❦</span></div>
+   <div className="v17-ambient" aria-hidden="true"><span/><span/><span/><span/><span/><span/><span/><span/></div>
    {!opened?<div className={`v15-entry ${opening?'v15-entry-opening':''}`}>
     <div className="v15-entry-inner">
      <div className="v15-smallcap">THE WEDDING OF</div>
@@ -168,11 +177,12 @@ export default function Invitation({data={},template,preview=false,invitationId=
      <p>{dayString(data.date)} · {dateString(data.date)}</p><div className="v15-divider">✦</div>
      <p className="v15-to">Kepada Yth.<br/><strong>{data.guest||'Tamu Undangan'}</strong></p>
      <button type="button" className="v15-main-button" onClick={openInvitation} disabled={opening}>{opening?'Membuka undangan…':'✉ Buka Undangan'}</button>
-     <small>Geser ke bawah untuk menjelajahi undangan</small>
+     <small className="v17-open-hint">Musik & animasi dimulai setelah undangan dibuka</small>
     </div>
     <div className="v15-curtain v15-curtain-left"/><div className="v15-curtain v15-curtain-right"/>
    </div>:<>
     <div className="v16-progress" aria-hidden="true"><span style={{width:`${progress*100}%`}}/></div>
+    <div className="v17-section-counter" aria-hidden="true"><span>{String(Math.max(1,SECTIONS.findIndex(item=>item.id===active)+1)).padStart(2,'0')}</span><i/>07</div>
     <main className="v15-page-area v16-scroll-area" ref={scrollRef} aria-label="Isi undangan yang bisa discroll">
      <section data-section="opening" id="v16-opening" className="v15-panel v15-panel-opening v16-section">
       <span className="v15-kicker v16-reveal">SAVE THE DATE</span>
@@ -181,7 +191,7 @@ export default function Invitation({data={},template,preview=false,invitationId=
       <h2 className="v16-reveal">{data.couple1||'Raka'} <em>&amp;</em> {data.couple2||'Naira'}</h2>
       <p className="v15-center-label v16-reveal">{dayString(data.date)}, {dateString(data.date)}</p>
       <div className="v16-reveal"><Countdown date={data.date} time={data.time}/></div>
-      <button type="button" className="v15-outline-button v16-reveal" onClick={()=>scrollToSection('quotes')}>Geser untuk lanjut ↓</button>
+      <button type="button" className="v15-outline-button v16-reveal v17-scroll-prompt" onClick={()=>scrollToSection('quotes')}>Geser untuk lanjut <span aria-hidden="true">↓</span></button>
      </section>
      <section data-section="quotes" id="v16-quotes" className="v15-panel v15-panel-quotes v16-section">
       <span className="v15-kicker v16-reveal">DOA &amp; HARAPAN</span>
