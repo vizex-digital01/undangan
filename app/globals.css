@@ -159,3 +159,41 @@
 .template-triptych.theme-javanese-blue{background:#0b2c50 url("/themes/batik-blue.svg") center/cover;color:#e5bf7b}
 .template-triptych.theme-cream-flowers{background:#fff7ee url("/themes/cream-flowers.svg") center/cover;color:#9a6b75}
 .template-triptych.theme-green-motion{background:#e0ebdf url("/themes/green-landscape.svg") center/cover;color:#416c54}
+
+/* VIZEX v16 — continuous scroll wedding invitations, animated on intersection. */
+.v16-shell .v16-scroll-area{scroll-behavior:smooth;scrollbar-gutter:stable;scroll-snap-type:none;overscroll-behavior-y:contain;overflow-x:hidden;padding-bottom:22px;--scroll-shift:0px}
+.v16-shell .v15-paper{transform:translate3d(0,calc(var(--scroll-shift,0px) * .32),0) scale(1.09);transition:transform .35s ease-out;will-change:transform}
+.v16-shell .v15-mist{animation-duration:11s;mix-blend-mode:screen;opacity:.8}
+.v16-shell .v15-floaters span{animation-duration:5s;font-size:20px;filter:drop-shadow(0 0 6px var(--edge))}
+.v16-shell .v15-floaters span:nth-child(2){animation-duration:7s;left:91%}
+.v16-shell .v15-floaters span:nth-child(3){animation-duration:9s;left:7%}
+.v16-shell .v16-section{position:relative;justify-content:center;min-height:calc(100% - 1px);padding:84px 28px 100px;border-bottom:1px solid color-mix(in srgb,var(--edge),transparent 76%);isolation:isolate;scroll-margin-top:4px}
+.v16-shell .v16-section:nth-of-type(2n){background:linear-gradient(180deg,transparent,rgba(255,255,255,.035),transparent)}
+.v16-shell .v16-section>*{position:relative;z-index:1}
+.v16-shell .v16-section::after{content:'✧';position:absolute;bottom:17px;left:50%;transform:translateX(-50%);color:var(--edge);opacity:.45;font-size:22px}
+.v16-shell .v16-section:nth-child(2n)::before{content:'❦';pointer-events:none;position:absolute;right:-18px;top:18%;font-size:90px;color:var(--edge);opacity:.11;animation:v16petal 10s ease-in-out infinite alternate;z-index:0}
+.v16-shell .v16-section:nth-child(3n)::before{content:'❧';pointer-events:none;position:absolute;left:-20px;bottom:20%;font-size:100px;color:var(--edge);opacity:.11;animation:v16petal 12s ease-in-out infinite alternate-reverse;z-index:0}
+.v16-shell .v16-section .v16-reveal{opacity:0;transform:translate3d(0,38px,0) scale(.975);filter:blur(5px);transition:opacity .85s cubic-bezier(.18,.75,.3,1),transform 1.05s cubic-bezier(.16,1,.28,1),filter .85s ease;will-change:opacity,transform;}
+.v16-shell .v16-section .v16-reveal.v16-left{transform:translate3d(-45px,10px,0) scale(.96)}
+.v16-shell .v16-section .v16-reveal.v16-right{transform:translate3d(45px,10px,0) scale(.96)}
+.v16-shell .v16-section .v16-reveal.v16-zoom{transform:translate3d(0,18px,0) scale(.82)}
+.v16-shell .v16-section .v16-reveal.v16-visible{opacity:1;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.v16-shell .v16-section .v16-reveal:nth-child(2){transition-delay:.12s}
+.v16-shell .v16-section .v16-reveal:nth-child(3){transition-delay:.19s}
+.v16-shell .v16-section .v16-reveal:nth-child(4){transition-delay:.24s}
+.v16-shell .v16-section .v16-reveal:nth-child(5){transition-delay:.31s}
+.v16-shell .v16-section .v16-reveal:nth-child(6){transition-delay:.36s}
+.v16-shell .v15-photo-grid .v16-reveal:nth-child(2n){transition-delay:.15s}
+.v16-shell .v15-photo-grid .v16-reveal:nth-child(3n){transition-delay:.25s}
+.v16-shell .v15-events article{min-height:142px}
+.v16-shell .v16-progress{position:absolute;top:0;left:0;right:0;height:3px;z-index:7;background:transparent}
+.v16-shell .v16-progress>span{height:100%;display:block;background:var(--edge);transition:width .16s linear}
+.v16-shell .v16-ending{text-align:center;padding:34px 0 95px;color:var(--edge);font-size:27px;opacity:.65}
+.v16-shell .v15-page-area{animation:v15page .85s cubic-bezier(.16,1,.3,1) both}
+.v16-shell .v15-bottom-nav{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--nav),transparent 8%)}
+.v16-shell .v15-side-actions{bottom:95px}
+.v16-shell .v15-rsvp-form{width:100%}
+@keyframes v16petal{0%{transform:translateY(0) rotate(-13deg)}100%{transform:translateY(-37px) rotate(22deg)}}
+@media(max-width:480px){.v16-shell .v16-section{min-height:calc(100% - 1px);padding:55px 27px 82px}.v16-shell .v15-panel h2{font-size:clamp(30px,8.6vw,42px)}.v16-shell .v15-couple-avatar{width:107px;height:137px}}
+@media(prefers-reduced-motion:reduce){.v16-shell .v16-section .v16-reveal,.v16-shell .v16-section .v16-reveal.v16-left,.v16-shell .v16-section .v16-reveal.v16-right,.v16-shell .v16-section .v16-reveal.v16-zoom{opacity:1;transform:none;filter:none;transition:none}.v16-shell .v16-scroll-area{scroll-behavior:auto}}
+.v16-editor-audio{display:grid;gap:8px;margin:12px 0 22px;padding:13px;border:1px solid #e4d8c8;border-radius:10px;background:#faf6ef}.v16-editor-audio audio{width:100%;height:40px}.v16-editor-audio small{color:#756c5e}

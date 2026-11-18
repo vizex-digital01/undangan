@@ -1,3 +1,5 @@
+**UPDATE TERBARU VIZEX v16:** Lihat `PANDUAN_V16_SCROLL_MUSIK.md` untuk animasi scroll dan 7 lagu yang diunggah.
+
 > **VIZEX v9:** Pembayaran SeaBank manual sudah ditambahkan. Baca **[PANDUAN_PEMBAYARAN_SEABANK.md](PANDUAN_PEMBAYARAN_SEABANK.md)** terlebih dahulu. Untuk database yang sudah dipakai, jalankan **`supabase/seabank_migration.sql`**, bukan membuat ulang tabel.
 
 # VIZEX — Digital Invitation Studio
@@ -89,3 +91,11 @@ Aplikasi Next.js App Router untuk website jasa undangan digital: katalog, editor
 - Migrasi v10 mengubah kolom `user_id` menjadi nullable; aturan RLS lama tetap aktif untuk akun lama. Token cookie baru tidak dikirim ke JavaScript di browser.
 - **Wajib uji sebelum live:** sesi berbeda tidak boleh melihat draft orang lain, browser privat tidak bisa membuka editor milik orang lain, pembayaran belum diverifikasi tidak bisa membuka `/invite/slug`, API review hanya dapat digunakan UID admin yang benar-benar login.
 - Simpan bukti transfer hanya di storage privat, cek mutasi SeaBank sebelum klik Setujui.
+
+
+## Upgrade v14
+Baca `PANDUAN_V14_TEMA_MUSIK_RSVP.md`. Jalankan migrasi v14 setelah v13.
+
+
+## Update v15 (Nov 2026)
+Lihat `PANDUAN_V15_UNDANGAN_INTERAKTIF.md`. Ada 3 template referensi interaktif baru dan navigasi panel/tab, tanpa migrasi database.

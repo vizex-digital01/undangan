@@ -1,0 +1,12 @@
+VIZEX v16 — Music attribution & licensing notes
+
+These seven tracks were supplied by the website owner for integration into VIZEX.
+Their creator names are inferred from the provided filenames:
+Andriig, Alex Morgan, Vlad Annenkov, Sahil Madan, Leberch, Strains of Poise, Prettyjohn1.
+
+Before commercial publication, independently confirm the rights/license for each track,
+including commercial use, hosting on a paid invitation service, redistribution, and
+required artist credit. Possession of a file is not proof of a commercial license.
+
+Assets were transcoded to 128kbps MP3 without intentionally changing the musical work.
+No third-party licenses are supplied by this package.

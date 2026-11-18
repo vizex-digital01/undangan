@@ -1,8 +1,9 @@
 'use client';
 import {useCallback,useEffect,useRef,useState} from 'react';
+import {resolveMusic} from '@/lib/music';
 
-const TABS=[
- {id:'opening',label:'Opening',symbol:'✉'},
+const SECTIONS=[
+ {id:'opening',label:'Awal',symbol:'✉'},
  {id:'quotes',label:'Doa',symbol:'✧'},
  {id:'couple',label:'Mempelai',symbol:'♥'},
  {id:'event',label:'Acara',symbol:'◷'},
@@ -10,59 +11,241 @@ const TABS=[
  {id:'rsvp',label:'RSVP',symbol:'✓'},
  {id:'gift',label:'Hadiah',symbol:'♡'}
 ];
-const fmtDate=(value)=>{if(!value)return 'Tanggal acara';const dt=new Date(`${value}T12:00:00`);return Number.isNaN(dt.getTime())?value:new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric'}).format(dt)};
-const fmtDay=(value)=>{if(!value)return '';const dt=new Date(`${value}T12:00:00`);return Number.isNaN(dt.getTime())?'':new Intl.DateTimeFormat('id-ID',{weekday:'long'}).format(dt)};
+const dateString=(value)=>{
+ if(!value)return 'Tanggal acara';
+ const d=new Date(`${value}T12:00:00`);
+ return Number.isNaN(d.getTime())?value:new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric'}).format(d);
+};
+const dayString=(value)=>{
+ if(!value)return '';
+ const d=new Date(`${value}T12:00:00`);
+ return Number.isNaN(d.getTime())?'':new Intl.DateTimeFormat('id-ID',{weekday:'long'}).format(d);
+};
 const digits=(s)=>(s||'').replace(/\D/g,'');
-const slideClass=(template)=>{const t=template?.theme||'';if(t==='javanese-blue'||t==='mega-mendung'||t==='batik-kawung')return 'blue';if(t==='cream-flowers'||t==='blush'||t==='sakura')return 'cream';if(t==='green-motion'||t==='sage'||t==='emerald')return 'green';return template?.category==='batik'||template?.category==='adat'?'blue':template?.category==='floral'?'cream':template?.category==='cinematic'?'green':'royal';};
+function themeClass(template){
+ const t=template?.theme||'';
+ if(['javanese-blue','mega-mendung','batik-kawung'].includes(t))return 'blue';
+ if(['cream-flowers','blush','sakura'].includes(t))return 'cream';
+ if(['green-motion','sage','emerald'].includes(t))return 'green';
+ return ['batik','adat'].includes(template?.category)?'blue':template?.category==='floral'?'cream':template?.category==='cinematic'?'green':'royal';
+}
 function Countdown({date,time}){
  const [remain,setRemain]=useState(null);
- useEffect(()=>{const calc=()=>{const target=new Date(`${date||'2027-06-20'}T${time||'09:00'}:00`).getTime();setRemain(Number.isFinite(target)?Math.max(0,target-Date.now()):null)};calc();const interval=setInterval(calc,1000);return()=>clearInterval(interval)},[date,time]);
+ useEffect(()=>{
+  const calc=()=>{
+   const value=new Date(`${date||'2027-06-20'}T${time||'09:00'}:00`).getTime();
+   setRemain(Number.isFinite(value)?Math.max(0,value-Date.now()):null);
+  };
+  calc();const timer=setInterval(calc,1000);return()=>clearInterval(timer);
+ },[date,time]);
  if(remain===null)return null;
  const n=[Math.floor(remain/86400000),Math.floor(remain%86400000/3600000),Math.floor(remain%3600000/60000),Math.floor(remain%60000/1000)];
- return <div className="v15-countdown">{n.map((v,i)=><div key={i}><strong>{String(v).padStart(2,'0')}</strong><span>{['Hari','Jam','Menit','Detik'][i]}</span></div>)}</div>
+ return <div className="v15-countdown">{n.map((v,i)=><div key={i}><strong>{String(v).padStart(2,'0')}</strong><span>{['Hari','Jam','Menit','Detik'][i]}</span></div>)}</div>;
 }
+
 export default function Invitation({data={},template,preview=false,invitationId=null}){
- const [opened,setOpened]=useState(false),[opening,setOpening]=useState(false),[active,setActive]=useState('opening'),[pageCount,setPageCount]=useState(0);
- const [playing,setPlaying]=useState(false),[lightbox,setLightbox]=useState(-1),[copyMessage,setCopyMessage]=useState('');
- const [rsvp,setRsvp]=useState({name:'',attendance:'hadir',partySize:1,wish:''}),[rsvpStatus,setRsvpStatus]=useState(''),[busy,setBusy]=useState(false);
- const audioRef=useRef(null),paneRef=useRef(null),timeoutRef=useRef(null);
- const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[],cover=photos[0]||null;
- const type=slideClass(template),theme=template?.theme||'ivory';
- const selectedMusic=data.musicTrack||'auto';
- const category=template?.category||'royal';
- const track=selectedMusic==='auto'?(['batik','adat'].includes(category)?'gamelan':category==='cinematic'?'cinematic':'piano'):selectedMusic;
- // The original audio assets in /public/music are part of VIZEX; playback starts only after a user gesture.
- const audioSrc=track==='none'?null:track==='piano'||track==='gamelan'||track==='cinematic'?`/music/${track}.wav`:null;
- const move=useCallback((tab)=>{setActive(tab);setPageCount(c=>c+1);if(paneRef.current)paneRef.current.scrollTop=0},[]);
- const openInvite=()=>{if(opening||opened)return;setOpening(true);if(audioRef.current){audioRef.current.volume=.23;audioRef.current.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false))}timeoutRef.current=setTimeout(()=>{setOpened(true);setOpening(false);setActive('opening')},1150)};
- useEffect(()=>()=>clearTimeout(timeoutRef.current),[]);
- const toggleSound=()=>{const el=audioRef.current;if(!el)return;if(el.paused){el.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false))}else{el.pause();setPlaying(false)}};
- const resetPreview=()=>{clearTimeout(timeoutRef.current);setOpened(false);setOpening(false);setActive('opening');audioRef.current?.pause();setPlaying(false)};
- const copyValue=async(value)=>{if(!value)return;try{await navigator.clipboard.writeText(value);setCopyMessage('Berhasil disalin');setTimeout(()=>setCopyMessage(''),2200)}catch{setCopyMessage('Silakan salin secara manual')}};
- const onRsvp=async(e)=>{e.preventDefault();if(preview||!invitationId){setRsvpStatus('Mode demo: RSVP akan aktif setelah undangan diterbitkan.');return}if(!rsvp.name.trim()){setRsvpStatus('Isi nama terlebih dahulu.');return}setBusy(true);setRsvpStatus('');try{const resp=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...rsvp,invitationId})});const body=await resp.json();if(!resp.ok)throw new Error(body.error||'Tidak bisa menyimpan RSVP');setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.')}catch(err){setRsvpStatus(err.message)}finally{setBusy(false)}};
+ const [opened,setOpened]=useState(false);
+ const [opening,setOpening]=useState(false);
+ const [active,setActive]=useState('opening');
+ const [progress,setProgress]=useState(0);
+ const [playing,setPlaying]=useState(false);
+ const [lightbox,setLightbox]=useState(-1);
+ const [copyMessage,setCopyMessage]=useState('');
+ const [rsvp,setRsvp]=useState({name:'',attendance:'hadir',partySize:1,wish:''});
+ const [rsvpStatus,setRsvpStatus]=useState('');
+ const [busy,setBusy]=useState(false);
+ const audioRef=useRef(null);
+ const scrollRef=useRef(null);
+ const animationRef=useRef(null);
+ const photos=Array.isArray(data.photos)?data.photos.filter(Boolean):[];
+ const cover=photos[0]||null;
+ const music=resolveMusic(data.musicTrack||'auto',template);
+ const type=themeClass(template);
+ const theme=template?.theme||'ivory';
  const contact=digits(data.rsvpPhone);
- return <div className={`v15-shell v15-style-${type} v15-theme-${theme}`}>
- {audioSrc&&<audio ref={audioRef} src={audioSrc} preload="none" loop/>}
- <div className="v15-stage" aria-label="Undangan digital interaktif">
-  <div className="v15-paper" aria-hidden="true"/><div className="v15-mist" aria-hidden="true"/><div className="v15-floaters" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
-  {!opened?<div className={`v15-entry ${opening?'v15-entry-opening':''}`}>
-   <div className="v15-entry-inner"><div className="v15-smallcap">THE WEDDING OF</div><div className="v15-entry-ring"><div className="v15-entry-symbol">{cover?<img src={cover} alt="Foto pengantin"/>:<span>❦</span>}</div></div>
-   <h1>{data.couple1||'Raka'} <em>&</em> {data.couple2||'Naira'}</h1><p>{fmtDay(data.date)} · {fmtDate(data.date)}</p><div className="v15-divider">✦</div><p className="v15-to">Kepada Yth.<br/><strong>{data.guest||'Tamu Undangan'}</strong></p><button type="button" className="v15-main-button" disabled={opening} onClick={openInvite}>{opening?'Membuka kisah…':'✉  Buka Undangan'}</button><small>Undangan terbaik untuk momen istimewa</small></div>
-   <div className="v15-curtain v15-curtain-left"/><div className="v15-curtain v15-curtain-right"/>
-  </div>:<>
-   <div className="v15-page-area" ref={paneRef} key={pageCount} role="tabpanel" aria-label={TABS.find(t=>t.id===active)?.label}>
-    {active==='opening'&&<div className="v15-panel v15-panel-opening"><span className="v15-kicker">SAVE THE DATE</span><div className="v15-monogram">{(data.couple1||'R').slice(0,1)} <small>&</small> {(data.couple2||'N').slice(0,1)}</div><div className="v15-cover-medallion">{cover?<img src={cover} alt="Foto pengantin"/>:<span>❦</span>}</div><h2>{data.couple1||'Raka'} <em>&</em> {data.couple2||'Naira'}</h2><p className="v15-center-label">{fmtDay(data.date)}, {fmtDate(data.date)}</p><Countdown date={data.date} time={data.time}/><button className="v15-outline-button" onClick={()=>move('quotes')}>Selanjutnya <span aria-hidden="true">→</span></button></div>}
-    {active==='quotes'&&<div className="v15-panel v15-panel-quotes"><span className="v15-kicker">DOA & HARAPAN</span><div className="v15-initial-icon">❧</div><h2>Dengan Rahmat<br/>dan Kasih Sayang</h2><p className="v15-quote">“Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri, supaya kamu merasa tenteram kepadanya.”</p><span className="v15-verse">QS. Ar-Rum: 21</span><div className="v15-divider">✦</div><p>{data.quote||'Dua hati, satu kisah, selamanya.'}</p><button className="v15-outline-button" onClick={()=>move('couple')}>Kenali Mempelai →</button></div>}
-    {active==='couple'&&<div className="v15-panel v15-panel-couple"><span className="v15-kicker">THE HAPPY COUPLE</span><h2>Dua Hati,<br/>Satu Perjalanan</h2><div className="v15-couple-grid"><article><div className="v15-couple-avatar">{photos[0]?<img src={photos[0]} alt="Foto mempelai pertama"/>:<b>{(data.couple1||'R').charAt(0)}</b>}</div><h3>{data.couple1||'Raka'}</h3><span>MEMPELAI</span></article><span className="v15-amp">&</span><article><div className="v15-couple-avatar">{photos[1]?<img src={photos[1]} alt="Foto mempelai kedua"/>:<b>{(data.couple2||'N').charAt(0)}</b>}</div><h3>{data.couple2||'Naira'}</h3><span>MEMPELAI</span></article></div><p className="v15-story">{data.story||'Setiap perjalanan indah dimulai dengan satu pertemuan.'}</p></div>}
-    {active==='event'&&<div className="v15-panel v15-panel-event"><span className="v15-kicker">WEDDING EVENT</span><h2>Hari Bahagia Kami</h2><p>Dengan penuh rasa syukur, kami mengundang Anda untuk hadir.</p><div className="v15-events"><article><span className="v15-event-mark">01</span><h3>Akad Nikah</h3><strong>{fmtDay(data.date)}, {fmtDate(data.date)}</strong><span>{data.time||'09:00'} WIB</span></article><article><span className="v15-event-mark">02</span><h3>Resepsi</h3><strong>{fmtDay(data.date)}, {fmtDate(data.date)}</strong><span>{data.receptionTime||'11:00'} WIB</span></article></div><h3 className="v15-location-title">{data.place||'Lokasi Acara'}</h3><p>{data.address||'Alamat acara'}</p>{data.maps?.startsWith('https://')&&<a href={data.maps} target="_blank" rel="noopener noreferrer" className="v15-main-button">⌖ Buka Google Maps</a>}<div className="v15-spacing"/></div>}
-    {active==='gallery'&&<div className="v15-panel v15-panel-gallery"><span className="v15-kicker">OUR MEMORIES</span><h2>Galeri Cerita</h2><p>Momen-momen kecil yang menjadi bagian dari perjalanan kami.</p><div className="v15-photo-grid">{photos.length?photos.map((p,i)=><button type="button" aria-label={`Perbesar foto ${i+1}`} key={i} onClick={()=>setLightbox(i)}><img alt={`Galeri foto ${i+1}`} src={p}/></button>):[0,1,2,3].map(i=><div className="v15-photo-blank" key={i}><span>❦</span><small>FOTO {i+1}</small></div>)}</div>{!photos.length&&<p className="v15-muted">Pemilik undangan bisa menambahkan foto melalui editor VIZEX.</p>}</div>}
-    {active==='rsvp'&&<div className="v15-panel v15-panel-rsvp"><span className="v15-kicker">RSVP & WISHES</span><h2>Konfirmasi Kehadiran</h2><p>Mohon berkenan memberi kabar untuk memudahkan persiapan acara kami.</p><form onSubmit={onRsvp} className="v15-rsvp-form"><label>Nama lengkap<input required maxLength="100" value={rsvp.name} onChange={e=>setRsvp(x=>({...x,name:e.target.value}))} placeholder="Nama Anda"/></label><label>Konfirmasi<select value={rsvp.attendance} onChange={e=>setRsvp(x=>({...x,attendance:e.target.value}))}><option value="hadir">InsyaAllah hadir</option><option value="tidak">Maaf, tidak bisa hadir</option><option value="ragu">Belum pasti</option></select></label>{rsvp.attendance==='hadir'&&<label>Jumlah tamu<select value={rsvp.partySize} onChange={e=>setRsvp(x=>({...x,partySize:Number(e.target.value)}))}>{[1,2,3,4].map(n=><option value={n} key={n}>{n} orang</option>)}</select></label>}<label>Ucapan & doa<textarea maxLength={500} rows="3" placeholder="Tulis ucapan untuk kedua mempelai…" value={rsvp.wish} onChange={e=>setRsvp(x=>({...x,wish:e.target.value}))}/></label><button type="submit" disabled={busy} className="v15-main-button">{busy?'Mengirim…':'Kirim Konfirmasi'}</button>{rsvpStatus&&<p className="v15-feedback" role="status">{rsvpStatus}</p>}</form></div>}
-    {active==='gift'&&<div className="v15-panel v15-panel-gift"><span className="v15-kicker">WEDDING GIFT</span><div className="v15-initial-icon">♡</div><h2>Tanda Kasih</h2><p>Doa restu Anda merupakan hadiah terindah bagi kami.</p>{data.accountNumber?<div className="v15-bank-card"><small>HADIAH DIGITAL</small><strong>{data.accountName||'Rekening penerima'}</strong><p>{data.accountNumber}</p><button className="v15-outline-button" onClick={()=>copyValue(data.accountNumber)}>Salin Nomor Rekening</button></div>:<p className="v15-muted">Informasi amplop digital belum ditambahkan oleh pemilik undangan.</p>}<div className="v15-divider">✦</div><p>Terima kasih atas doa dan kehadiran Anda.</p><h3>{data.couple1||'Raka'} <em>&</em> {data.couple2||'Naira'}</h3>{copyMessage&&<p role="status">{copyMessage}</p>}</div>}
-   </div>
-   <div className="v15-side-actions">{audioSrc&&<button type="button" aria-label={playing?'Jeda musik':'Putar musik'} title={playing?'Jeda musik':'Putar musik'} onClick={toggleSound}>{playing?'♫':'♪'}</button>}{contact&&<a href={`https://wa.me/${contact}?text=${encodeURIComponent(`Halo, saya ingin bertanya tentang acara ${data.couple1||''} & ${data.couple2||''}`)}`} aria-label="Hubungi melalui WhatsApp" target="_blank" rel="noopener noreferrer">✆</a>}{!preview&&<button type="button" title="Salin link undangan" aria-label="Salin link undangan" onClick={()=>copyValue(window.location.href)}>↗</button>}</div>
-   <nav className="v15-bottom-nav" aria-label="Menu undangan" role="tablist">{TABS.map(item=><button type="button" role="tab" aria-selected={active===item.id} className={active===item.id?'active':''} onClick={()=>move(item.id)} key={item.id}><span aria-hidden="true">{item.symbol}</span><small>{item.label}</small></button>)}</nav>
-  </>}
-  {preview&&<button className="v15-reset" onClick={resetPreview} title="Ulangi animasi pembuka">↻</button>}
-  {lightbox>=0&&<div className="v15-lightbox" role="dialog" aria-modal="true" aria-label="Lihat foto"><button aria-label="Tutup foto" onClick={()=>setLightbox(-1)}>✕</button><img alt="Foto diperbesar" src={photos[lightbox]}/></div>}
- </div></div>
+
+ // One long scroll container. The lower navigation only scrolls to the target section.
+ const scrollToSection=useCallback((id)=>{
+  const pane=scrollRef.current;
+  const section=pane?.querySelector(`[data-section="${id}"]`);
+  if(!pane||!section)return;
+  setActive(id);
+  pane.scrollTo({top:section.offsetTop-pane.offsetTop,behavior:'smooth'});
+ },[]);
+
+ useEffect(()=>{
+  if(!opened||!scrollRef.current)return;
+  const pane=scrollRef.current;
+  const reveals=[...pane.querySelectorAll('.v16-reveal')];
+  let observer;
+  if(typeof IntersectionObserver!=='undefined'){
+   observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+     if(entry.isIntersecting){entry.target.classList.add('v16-visible');observer.unobserve(entry.target);}
+    });
+   },{root:pane,threshold:0.13,rootMargin:'0px 0px 9% 0px'});
+   reveals.forEach(el=>observer.observe(el));
+  }else reveals.forEach(el=>el.classList.add('v16-visible'));
+  let frame=0;
+  const checkScroll=()=>{
+   if(frame)return;
+   frame=requestAnimationFrame(()=>{
+    frame=0;
+    const max=pane.scrollHeight-pane.clientHeight;
+    const ratio=max>0?pane.scrollTop/max:0;
+    setProgress(Math.min(1,Math.max(0,ratio)));
+    const sections=[...pane.querySelectorAll('[data-section]')];
+    const marker=pane.scrollTop+pane.clientHeight*.4;
+    let current=sections[0];
+    sections.forEach(section=>{if(section.offsetTop-pane.offsetTop<=marker)current=section});
+    if(current)setActive(current.dataset.section);
+    pane.parentElement?.style.setProperty('--scroll-shift',`${Math.round(ratio*48)}px`);
+   });
+  };
+  pane.addEventListener('scroll',checkScroll,{passive:true});
+  checkScroll();
+  return()=>{observer?.disconnect();pane.removeEventListener('scroll',checkScroll);if(frame)cancelAnimationFrame(frame)};
+ },[opened]);
+
+ useEffect(()=>{
+  const audio=audioRef.current;
+  setPlaying(false);
+  if(!audio)return;
+  const handleEnded=()=>setPlaying(false);
+  const handlePause=()=>setPlaying(false);
+  audio.addEventListener('ended',handleEnded);
+  audio.addEventListener('pause',handlePause);
+  return()=>{audio.removeEventListener('ended',handleEnded);audio.removeEventListener('pause',handlePause)};
+ },[music?.file]);
+ useEffect(()=>()=>{clearTimeout(animationRef.current);if(audioRef.current)audioRef.current.pause()},[]);
+
+ const openInvitation=()=>{
+  if(opened||opening)return;
+  setOpening(true);
+  // This click is a user gesture: browsers normally permit starting music here.
+  const audio=audioRef.current;
+  if(audio){audio.volume=.23;audio.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false));}
+  animationRef.current=setTimeout(()=>{setOpened(true);setOpening(false)},1050);
+ };
+ const toggleMusic=()=>{
+  const audio=audioRef.current;if(!audio)return;
+  if(audio.paused){audio.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false));}
+  else {audio.pause();setPlaying(false)}
+ };
+ const reset=()=>{
+  clearTimeout(animationRef.current);setOpened(false);setOpening(false);setProgress(0);setActive('opening');
+  if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0;}setPlaying(false);
+ };
+ const copyValue=async(value)=>{
+  if(!value)return;
+  try{await navigator.clipboard.writeText(value);setCopyMessage('Berhasil disalin')}
+  catch{setCopyMessage('Silakan salin secara manual')}
+  setTimeout(()=>setCopyMessage(''),2200);
+ };
+ const sendRsvp=async(e)=>{
+  e.preventDefault();
+  if(preview||!invitationId){setRsvpStatus('Mode preview: RSVP aktif setelah undangan diterbitkan.');return}
+  if(!rsvp.name.trim()){setRsvpStatus('Isi nama terlebih dahulu.');return}
+  setBusy(true);setRsvpStatus('');
+  try{
+   const resp=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...rsvp,invitationId})});
+   const body=await resp.json();
+   if(!resp.ok)throw new Error(body.error||'Tidak bisa menyimpan RSVP');
+   setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.');
+  }catch(error){setRsvpStatus(error.message)}finally{setBusy(false)}
+ };
+ return <div className={`v15-shell v16-shell v15-style-${type} v15-theme-${theme}`}>
+  {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
+  <div className="v15-stage" aria-label="Undangan digital VIZEX">
+   <div className="v15-paper" aria-hidden="true"/>
+   <div className="v15-mist" aria-hidden="true"/>
+   <div className="v15-floaters" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
+   {!opened?<div className={`v15-entry ${opening?'v15-entry-opening':''}`}>
+    <div className="v15-entry-inner">
+     <div className="v15-smallcap">THE WEDDING OF</div>
+     <div className="v15-entry-ring"><div className="v15-entry-symbol">{cover?<img src={cover} alt="Foto pengantin"/>:<span>❦</span>}</div></div>
+     <h1>{data.couple1||'Raka'} <em>&amp;</em> {data.couple2||'Naira'}</h1>
+     <p>{dayString(data.date)} · {dateString(data.date)}</p><div className="v15-divider">✦</div>
+     <p className="v15-to">Kepada Yth.<br/><strong>{data.guest||'Tamu Undangan'}</strong></p>
+     <button type="button" className="v15-main-button" onClick={openInvitation} disabled={opening}>{opening?'Membuka undangan…':'✉ Buka Undangan'}</button>
+     <small>Geser ke bawah untuk menjelajahi undangan</small>
+    </div>
+    <div className="v15-curtain v15-curtain-left"/><div className="v15-curtain v15-curtain-right"/>
+   </div>:<>
+    <div className="v16-progress" aria-hidden="true"><span style={{width:`${progress*100}%`}}/></div>
+    <main className="v15-page-area v16-scroll-area" ref={scrollRef} aria-label="Isi undangan yang bisa discroll">
+     <section data-section="opening" id="v16-opening" className="v15-panel v15-panel-opening v16-section">
+      <span className="v15-kicker v16-reveal">SAVE THE DATE</span>
+      <div className="v15-monogram v16-reveal">{(data.couple1||'R').slice(0,1)} <small>&amp;</small> {(data.couple2||'N').slice(0,1)}</div>
+      <div className="v15-cover-medallion v16-reveal v16-zoom">{cover?<img src={cover} alt="Foto kedua mempelai"/>:<span>❦</span>}</div>
+      <h2 className="v16-reveal">{data.couple1||'Raka'} <em>&amp;</em> {data.couple2||'Naira'}</h2>
+      <p className="v15-center-label v16-reveal">{dayString(data.date)}, {dateString(data.date)}</p>
+      <div className="v16-reveal"><Countdown date={data.date} time={data.time}/></div>
+      <button type="button" className="v15-outline-button v16-reveal" onClick={()=>scrollToSection('quotes')}>Geser untuk lanjut ↓</button>
+     </section>
+     <section data-section="quotes" id="v16-quotes" className="v15-panel v15-panel-quotes v16-section">
+      <span className="v15-kicker v16-reveal">DOA &amp; HARAPAN</span>
+      <div className="v15-initial-icon v16-reveal v16-zoom">❧</div>
+      <h2 className="v16-reveal">Dengan Rahmat<br/>dan Kasih Sayang</h2>
+      <p className="v15-quote v16-reveal">“Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri, supaya kamu merasa tenteram kepadanya.”</p>
+      <span className="v15-verse v16-reveal">QS. Ar-Rum: 21 (kutipan terjemahan)</span>
+      <div className="v15-divider v16-reveal">✦</div>
+      <p className="v16-reveal">{data.quote||'Dua hati, satu kisah, selamanya.'}</p>
+     </section>
+     <section data-section="couple" id="v16-couple" className="v15-panel v15-panel-couple v16-section">
+      <span className="v15-kicker v16-reveal">THE HAPPY COUPLE</span>
+      <h2 className="v16-reveal">Dua Hati,<br/>Satu Perjalanan</h2>
+      <div className="v15-couple-grid">
+       <article className="v16-reveal v16-left"><div className="v15-couple-avatar">{photos[0]?<img src={photos[0]} alt="Foto mempelai pertama"/>:<b>{(data.couple1||'R').charAt(0)}</b>}</div><h3>{data.couple1||'Raka'}</h3><span>MEMPELAI</span></article>
+       <span className="v15-amp v16-reveal">&amp;</span>
+       <article className="v16-reveal v16-right"><div className="v15-couple-avatar">{photos[1]?<img src={photos[1]} alt="Foto mempelai kedua"/>:<b>{(data.couple2||'N').charAt(0)}</b>}</div><h3>{data.couple2||'Naira'}</h3><span>MEMPELAI</span></article>
+      </div>
+      <p className="v15-story v16-reveal">{data.story||'Setiap perjalanan indah dimulai dengan satu pertemuan.'}</p>
+     </section>
+     <section data-section="event" id="v16-event" className="v15-panel v15-panel-event v16-section">
+      <span className="v15-kicker v16-reveal">WEDDING EVENT</span>
+      <h2 className="v16-reveal">Hari Bahagia Kami</h2>
+      <p className="v16-reveal">Dengan penuh rasa syukur, kami mengundang Anda untuk hadir.</p>
+      <div className="v15-events"><article className="v16-reveal v16-left"><span className="v15-event-mark">01</span><h3>Akad Nikah</h3><strong>{dayString(data.date)}, {dateString(data.date)}</strong><span>{data.time||'09:00'} WIB</span></article><article className="v16-reveal v16-right"><span className="v15-event-mark">02</span><h3>Resepsi</h3><strong>{dayString(data.date)}, {dateString(data.date)}</strong><span>{data.receptionTime||'11:00'} WIB</span></article></div>
+      <h3 className="v15-location-title v16-reveal">{data.place||'Lokasi Acara'}</h3><p className="v16-reveal">{data.address||'Alamat acara'}</p>
+      {data.maps?.startsWith('https://')&&<a href={data.maps} target="_blank" rel="noopener noreferrer" className="v15-main-button v16-reveal">⌖ Buka Google Maps</a>}
+     </section>
+     <section data-section="gallery" id="v16-gallery" className="v15-panel v15-panel-gallery v16-section">
+      <span className="v15-kicker v16-reveal">OUR MEMORIES</span><h2 className="v16-reveal">Galeri Cerita</h2>
+      <p className="v16-reveal">Momen-momen kecil yang menjadi bagian dari perjalanan kami.</p>
+      <div className="v15-photo-grid">{photos.length?photos.map((photo,i)=><button key={i} className="v16-reveal v16-zoom" type="button" aria-label={`Perbesar foto ${i+1}`} onClick={()=>setLightbox(i)}><img alt={`Galeri foto ${i+1}`} src={photo} loading="lazy"/></button>):[0,1,2,3].map(i=><div className="v15-photo-blank v16-reveal v16-zoom" key={i}><span>❦</span><small>FOTO {i+1}</small></div>)}</div>
+      {!photos.length&&<p className="v15-muted v16-reveal">Pemilik undangan dapat menambahkan foto di editor VIZEX.</p>}
+     </section>
+     <section data-section="rsvp" id="v16-rsvp" className="v15-panel v15-panel-rsvp v16-section">
+      <span className="v15-kicker v16-reveal">RSVP &amp; WISHES</span><h2 className="v16-reveal">Konfirmasi Kehadiran</h2>
+      <p className="v16-reveal">Mohon berkenan memberi kabar untuk memudahkan persiapan acara kami.</p>
+      <form onSubmit={sendRsvp} className="v15-rsvp-form v16-reveal">
+       <label>Nama lengkap<input required maxLength="100" value={rsvp.name} onChange={e=>setRsvp(v=>({...v,name:e.target.value}))} placeholder="Nama Anda"/></label>
+       <label>Konfirmasi<select value={rsvp.attendance} onChange={e=>setRsvp(v=>({...v,attendance:e.target.value}))}><option value="hadir">InsyaAllah hadir</option><option value="tidak">Maaf, tidak bisa hadir</option><option value="ragu">Belum pasti</option></select></label>
+       {rsvp.attendance==='hadir'&&<label>Jumlah tamu<select value={rsvp.partySize} onChange={e=>setRsvp(v=>({...v,partySize:Number(e.target.value)}))}>{[1,2,3,4].map(n=><option value={n} key={n}>{n} orang</option>)}</select></label>}
+       <label>Ucapan &amp; doa<textarea maxLength={500} rows={3} placeholder="Tulis ucapan untuk kedua mempelai…" value={rsvp.wish} onChange={e=>setRsvp(v=>({...v,wish:e.target.value}))}/></label>
+       <button type="submit" disabled={busy} className="v15-main-button">{busy?'Mengirim…':'Kirim Konfirmasi'}</button>
+       {rsvpStatus&&<p className="v15-feedback" role="status">{rsvpStatus}</p>}
+      </form>
+     </section>
+     <section data-section="gift" id="v16-gift" className="v15-panel v15-panel-gift v16-section">
+      <span className="v15-kicker v16-reveal">WEDDING GIFT</span><div className="v15-initial-icon v16-reveal v16-zoom">♡</div><h2 className="v16-reveal">Tanda Kasih</h2>
+      <p className="v16-reveal">Doa restu Anda merupakan hadiah terindah bagi kami.</p>
+      {data.accountNumber?<div className="v15-bank-card v16-reveal"><small>HADIAH DIGITAL</small><strong>{data.accountName||'Rekening penerima'}</strong><p>{data.accountNumber}</p><button className="v15-outline-button" onClick={()=>copyValue(data.accountNumber)}>Salin Nomor Rekening</button></div>:<p className="v15-muted v16-reveal">Informasi amplop digital belum ditambahkan oleh pemilik undangan.</p>}
+      <div className="v15-divider v16-reveal">✦</div><p className="v16-reveal">Terima kasih atas doa dan kehadiran Anda.</p><h3 className="v16-reveal">{data.couple1||'Raka'} <em>&amp;</em> {data.couple2||'Naira'}</h3>
+      {copyMessage&&<p role="status">{copyMessage}</p>}
+     </section>
+     <div className="v16-ending" aria-hidden="true">❦</div>
+    </main>
+    <div className="v15-side-actions">
+     {music&&<button type="button" onClick={toggleMusic} aria-label={playing?'Jeda musik':'Putar musik'} title={playing?`Jeda: ${music.label}`:`Putar: ${music.label}`}>{playing?'♫':'♪'}</button>}
+     {contact&&<a href={`https://wa.me/${contact}?text=${encodeURIComponent(`Halo, saya ingin bertanya tentang acara ${data.couple1||''} & ${data.couple2||''}`)}`} aria-label="Hubungi melalui WhatsApp" target="_blank" rel="noopener noreferrer">✆</a>}
+     {!preview&&<button type="button" onClick={()=>copyValue(window.location.href)} aria-label="Salin link undangan">↗</button>}
+    </div>
+    <nav className="v15-bottom-nav" aria-label="Lompat ke bagian undangan">{SECTIONS.map(item=><button type="button" key={item.id} className={active===item.id?'active':''} aria-current={active===item.id?'location':undefined} onClick={()=>scrollToSection(item.id)}><span aria-hidden="true">{item.symbol}</span><small>{item.label}</small></button>)}</nav>
+   </>}
+   {preview&&<button className="v15-reset" onClick={reset} type="button" title="Ulangi pembuka">↻</button>}
+   {lightbox>=0&&<div className="v15-lightbox" role="dialog" aria-modal="true" aria-label="Lihat foto"><button type="button" aria-label="Tutup foto" onClick={()=>setLightbox(-1)}>✕</button><img alt="Foto diperbesar" src={photos[lightbox]}/></div>}
+  </div>
+ </div>;
 }
