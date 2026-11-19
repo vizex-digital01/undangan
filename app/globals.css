@@ -714,3 +714,62 @@
 
 .v25-thumb[class*="v25-art-"] .mini-center{isolation:isolate}
 .v25-thumb.v25-art-lavender .mini-center,.v25-thumb.v25-art-sakura .mini-center,.v25-thumb.v25-art-ocean .mini-center,.v25-thumb.v25-art-sunset .mini-center,.v25-thumb.v25-art-botanical .mini-center,.v25-thumb.v25-art-tropical .mini-center{color:var(--ink)!important}
+
+
+/* VIZEX v27 · 10 wedding covers rebuilt with source-derived animated edge layers.
+   Unlike v26 the artwork IS NOT baked twice into the opening background. */
+.v15-shell.v27-layered .v15-paper{background-image:var(--v27-base)!important;background-size:cover!important;background-position:center!important;opacity:1!important}
+.v15-shell.v27-layered.v25-is-open .v15-paper{background-image:var(--v25-section)!important}
+.v15-shell.v27-layered .v15-entry{isolation:isolate;overflow:hidden}
+.v15-shell.v27-layered .v15-entry-inner{position:relative;z-index:5!important}
+.v15-shell.v27-layered .v15-entry-inner::before{backdrop-filter:blur(5px)!important}
+.v15-shell.v27-layered .v15-curtain{background-image:var(--v27-base)!important;opacity:.6!important}
+.v27-opening-scene{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;isolation:isolate}
+.v27-piece{position:absolute;inset:0;pointer-events:none;opacity:0;animation:v27Arrive 1.7s cubic-bezier(.17,.76,.24,1) calc(.12s + var(--v27-order)*.2s) both}
+.v27-piece img{display:block;width:100%;height:100%;object-fit:fill;pointer-events:none;max-width:none;transform-origin:50% 50%;animation:v27Breathe 12s ease-in-out 2s infinite alternate}
+.v27-piece-top{--v27-from-y:-7%;--v27-from-x:0px}
+.v27-piece-bottom{--v27-from-y:7%;--v27-from-x:0px}
+.v27-piece-left{--v27-from-y:0px;--v27-from-x:-9%}
+.v27-piece-right{--v27-from-y:0px;--v27-from-x:9%}
+.v27-detail{position:absolute;z-index:3;pointer-events:none;opacity:0;animation:v27DetailReveal 2.2s cubic-bezier(.16,.9,.23,1) 1s both}
+.v27-detail img{display:block;width:100%;height:100%;object-fit:contain;animation:v27Drift 7s ease-in-out infinite alternate;filter:drop-shadow(0 5px 16px #0002)}
+.v27-detail-a{width:clamp(68px,23%,104px);height:clamp(85px,19%,145px);top:29%;left:-10%;--detail-rotation:-15deg}
+.v27-detail-b{width:clamp(65px,22%,100px);height:clamp(85px,19%,148px);right:-11%;bottom:21%;--detail-rotation:15deg;animation-delay:1.3s}
+.v27-detail-b img{animation-direction:alternate-reverse}
+.v27-light{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--edge,#c4a16a);box-shadow:0 0 11px 5px color-mix(in srgb,var(--edge,#c4a16a),transparent 68%);opacity:0;animation:v27Glint 5s ease-in-out infinite}
+.v27-light-one{top:12%;left:10%}.v27-light-two{top:38%;right:10%;animation-delay:1.6s}.v27-light-three{bottom:13%;left:13%;animation-delay:3s}
+@keyframes v27Arrive{0%{opacity:0;transform:translate(var(--v27-from-x),var(--v27-from-y)) scale(1.025);filter:blur(7px)}100%{opacity:1;transform:translate(0,0) scale(1);filter:blur(0)}}
+@keyframes v27Breathe{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(0,-4px,0) scale(1.006)}}
+@keyframes v27DetailReveal{from{opacity:0;transform:translateY(16px) rotate(var(--detail-rotation,0deg)) scale(.85)}to{opacity:.44;transform:translateY(0) rotate(var(--detail-rotation,0deg)) scale(1)}}
+@keyframes v27Drift{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-9px) rotate(3deg)}}
+@keyframes v27Glint{0%,100%{opacity:0;transform:scale(.2)}45%,55%{opacity:.6;transform:scale(1.3)}}
+.v15-shell.v27-layered .v15-entry-opening .v27-opening-scene{animation:v27Exit var(--v19-cover-duration,1200ms) ease both}
+@keyframes v27Exit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.1)}}
+.v15-shell.v27-art-emerald{--v27-base:url('/themes/v27/emerald-base.webp')}
+.v15-shell.v27-art-blackgold{--v27-base:url('/themes/v27/blackgold-base.webp')}
+.v15-shell.v27-art-lavender{--v27-base:url('/themes/v27/lavender-base.webp')}
+.v15-shell.v27-art-sakura{--v27-base:url('/themes/v27/sakura-base.webp')}
+.v15-shell.v27-art-songket{--v27-base:url('/themes/v27/songket-base.webp')}
+.v15-shell.v27-art-ocean{--v27-base:url('/themes/v27/ocean-base.webp')}
+.v15-shell.v27-art-sunset{--v27-base:url('/themes/v27/sunset-base.webp')}
+.v15-shell.v27-art-botanical{--v27-base:url('/themes/v27/botanical-base.webp')}
+.v15-shell.v27-art-violet{--v27-base:url('/themes/v27/violet-base.webp')}
+.v15-shell.v27-art-tropical{--v27-base:url('/themes/v27/tropical-base.webp')}
+.v15-shell.v27-art-blackgold .v27-detail,.v15-shell.v27-art-songket .v27-detail{opacity:.28}
+@media(max-width:400px){.v15-shell.v27-layered .v15-entry-inner{max-width:298px!important}.v27-detail-a{left:-13%}.v27-detail-b{right:-13%}}
+@media(prefers-reduced-motion:reduce){.v27-opening-scene,.v27-opening-scene *{animation:none!important;transition:none!important;filter:none!important}.v27-piece{opacity:1!important;transform:none!important}.v27-detail{opacity:.3!important;transform:none!important}.v27-light{display:none!important}}
+
+/* Theme-specific physical motion profiles, keyed by original art direction. */
+.v27-scene-emerald .v27-piece-top{animation-duration:2.25s}
+.v27-scene-blackgold .v27-piece-left{--v27-from-x:-21%}.v27-scene-blackgold .v27-piece-right{--v27-from-x:21%}
+.v27-scene-blackgold .v27-detail img{animation-duration:13s}
+.v27-scene-lavender .v27-detail img{animation-duration:9s;filter:drop-shadow(0 7px 15px #c5a0cd44)}
+.v27-scene-sakura .v27-detail img{animation-duration:6s}
+.v27-scene-songket .v27-piece-top{animation-duration:2.5s}.v27-scene-songket .v27-detail img{animation-duration:14s}
+.v27-scene-ocean .v27-piece-bottom img{animation:v27OceanSway 9s ease-in-out 2s infinite alternate}
+.v27-scene-sunset .v27-light{animation-duration:7s}
+.v27-scene-botanical .v27-detail img{animation-duration:14s}
+.v27-scene-violet .v27-light{animation-duration:3s;box-shadow:0 0 14px 7px #e2c2f570}
+.v27-scene-tropical .v27-detail img{animation-duration:10s;transform-origin:top center}
+@keyframes v27OceanSway{from{transform:translateY(0) rotate(-.15deg)}to{transform:translateY(-5px) rotate(.2deg)}}
+@media(prefers-reduced-motion:reduce){.v27-scene-ocean .v27-piece-bottom img{animation:none!important;transform:none!important}}
