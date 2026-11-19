@@ -2,6 +2,8 @@
 import {visualForTemplate,layoutForTemplate,visualThemes} from '@/lib/theme-artwork';
 import {premiumArtSlug} from '@/lib/premium-v24';
 import {weddingArtSlug} from '@/lib/wedding-v25';
+import {weddingV26Slug} from '@/lib/wedding-v26';
+import WeddingV26Layers from '@/components/WeddingV26Layers';
 import WeddingOpeningLayers from '@/components/WeddingOpeningLayers';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {resolveMusic} from '@/lib/music';
@@ -69,6 +71,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
  const music=resolveMusic(data.musicTrack||'auto',template);
  const anim=animationForTemplate(template);
  const weddingSlug=weddingArtSlug(template);
+ const v26Slug=weddingV26Slug(template);
  const type=themeClass(template);
  const theme=template?.theme||'ivory';
  const contact=digits(data.rsvpPhone);
@@ -171,7 +174,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
    setRsvpStatus(body.message||'Konfirmasi kehadiran berhasil disimpan.');
   }catch(error){setRsvpStatus(error.message)}finally{setBusy(false)}
  };
- return <div className={`v15-shell v16-shell v17-shell v19-shell v15-style-${type} v15-theme-${theme} v22-v-${visualForTemplate(template)} v23-v-${visualForTemplate(template)} v23-l-${layoutForTemplate(template)} ${premiumArtSlug(template)?`v24-premium v24-art-${premiumArtSlug(template)}`:''} ${weddingSlug?`v24-premium v25-premium v25-art-${weddingSlug} ${opened?'v25-is-open':''}`:''}`} data-visual={type} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
+ return <div className={`v15-shell v16-shell v17-shell v19-shell v15-style-${type} v15-theme-${theme} v22-v-${visualForTemplate(template)} v23-v-${visualForTemplate(template)} v23-l-${layoutForTemplate(template)} ${premiumArtSlug(template)?`v24-premium v24-art-${premiumArtSlug(template)}`:''} ${weddingSlug||v26Slug?`v24-premium v25-premium v25-art-${weddingSlug||v26Slug} ${opened?'v25-is-open':''}`:''}`} data-visual={type} data-v19-cover={anim.cover.effect} data-v19-effect={anim.scroll.effect} style={{'--v19-cover-duration':anim.cover.duration+'ms','--v19-scroll-duration':anim.scroll.duration+'ms','--v19-stagger':anim.scroll.stagger+'ms'}}>
   {music&&<audio ref={audioRef} key={music.file} src={music.file} preload="none" loop playsInline/>}
   <div className="v15-stage" aria-label="Undangan digital VIZEX">
    <AnimationOverlay config={anim} stage={opened?'content':'cover'}/>
@@ -182,6 +185,7 @@ function WeddingInvitation({data={},template,preview=false,invitationId=null}){
    <div className="v17-ambient" aria-hidden="true"><span/><span/><span/><span/><span/><span/><span/><span/></div>
    {!opened?<div className={`v15-entry ${opening?'v15-entry-opening':''}`}>
     <WeddingOpeningLayers slug={weddingSlug}/>
+    <WeddingV26Layers slug={v26Slug}/>
     <div className="v15-entry-inner">
      <div className="v15-smallcap">THE WEDDING OF</div>
      <div className="v15-entry-ring"><div className="v15-entry-symbol">{cover?<img src={cover} alt="Foto pengantin"/>:<span>❦</span>}</div></div>

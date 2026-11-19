@@ -673,3 +673,44 @@
 
 .v25-thumb.v25-art-ivory .mini-center,.v25-thumb.v25-art-sage .mini-center,.v25-thumb.v25-art-rose .mini-center,.v25-thumb.v25-art-terracotta .mini-center{color:var(--ink)!important}
 @media(prefers-reduced-motion:reduce){.v15-shell.v25-premium .v16-reveal{opacity:1!important;transform:none!important;filter:none!important}}
+
+/* VIZEX v26 · 10 distinct curated wedding identities. Transparent motion ornaments stay at edges. */
+.v26-motion-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;isolation:isolate}
+.v26-ornament{position:absolute;display:block;object-fit:contain;pointer-events:none;opacity:.55;will-change:transform;filter:drop-shadow(0 2px 8px #0001)}
+.v26-ornament-left{left:-7%;top:17%;width:62px;height:175px;animation:v26floatLeft 9s ease-in-out infinite alternate}
+.v26-ornament-right{right:-7%;bottom:12%;width:62px;height:175px;transform:scaleX(-1);animation:v26floatRight 10s ease-in-out infinite alternate}
+.v26-ornament-arch{top:-1.5%;left:50%;width:48%;height:65px;transform:translateX(-50%);opacity:.62;animation:v26arch 8s ease-in-out infinite alternate}
+.v26-ornament-spark-one{top:17%;right:5%;width:18px;height:18px;animation:v26glimmer 5s ease-in-out infinite}
+.v26-ornament-spark-two{bottom:19%;left:6%;width:14px;height:14px;animation:v26glimmer 6s ease-in-out 2s infinite}
+@keyframes v26floatLeft{from{transform:translateY(9px) rotate(-4deg)}to{transform:translateY(-14px) rotate(4deg)}}
+@keyframes v26floatRight{from{transform:scaleX(-1) translateY(-7px) rotate(-3deg)}to{transform:scaleX(-1) translateY(12px) rotate(3deg)}}
+@keyframes v26arch{from{transform:translateX(-50%) scale(.97);opacity:.35}to{transform:translateX(-50%) scale(1.04);opacity:.68}}
+@keyframes v26glimmer{0%,100%{opacity:.05;transform:scale(.35) rotate(0)}48%{opacity:.85;transform:scale(1.15) rotate(70deg)}}
+.v15-shell.v25-premium.v26-motion-sakura .v26-ornament-left{animation-duration:7s}
+.v15-shell.v25-premium .v15-entry-inner{z-index:4!important}
+.v15-shell.v25-premium .v26-motion-layer{z-index:1}
+@media(max-width:460px){.v26-ornament-left{left:-10%;width:50px;opacity:.40}.v26-ornament-right{right:-10%;width:50px;opacity:.40}.v26-ornament-arch{top:-3%;height:47px;width:43%;opacity:.40}}
+@media(prefers-reduced-motion:reduce){.v26-motion-layer *{animation:none!important;transform:none!important}.v26-ornament-arch{transform:translateX(-50%)!important}}
+
+.v15-shell.v25-art-emerald,.v25-thumb.v25-art-emerald{--v25-preview:url('/themes/v26/emerald-thumb.webp');--v25-cover:url('/themes/v26/emerald-cover.webp');--v25-section:url('/themes/v26/emerald-section.webp');--v24-card:rgba(6,46,38,.86);--v24-border:#d7b15f;--v25-thumb-card:rgba(20,22,26,.83);--paper:#0b4539;--ink:#f9e9c3;--edge:#d7b15f;--btn:#d7b15f;--btnInk:#0b4539;--nav:#113b36;--outside:#113b36;}
+
+.v15-shell.v25-art-blackgold,.v25-thumb.v25-art-blackgold{--v25-preview:url('/themes/v26/blackgold-thumb.webp');--v25-cover:url('/themes/v26/blackgold-cover.webp');--v25-section:url('/themes/v26/blackgold-section.webp');--v24-card:rgba(20,18,20,.88);--v24-border:#cda36b;--v25-thumb-card:rgba(20,22,26,.83);--paper:#141316;--ink:#f6e4c0;--edge:#cda36b;--btn:#cda36b;--btnInk:#141316;--nav:#17171c;--outside:#17171c;}
+
+.v15-shell.v25-art-lavender,.v25-thumb.v25-art-lavender{--v25-preview:url('/themes/v26/lavender-thumb.webp');--v25-cover:url('/themes/v26/lavender-cover.webp');--v25-section:url('/themes/v26/lavender-section.webp');--v24-card:rgba(253,250,255,.86);--v24-border:#bca2d3;--v25-thumb-card:rgba(255,253,250,.83);--paper:#efe6fb;--ink:#59496d;--edge:#bca2d3;--btn:#bca2d3;--btnInk:#ffffff;--nav:#ece2f8;--outside:#ece2f8;}
+
+.v15-shell.v25-art-sakura,.v25-thumb.v25-art-sakura{--v25-preview:url('/themes/v26/sakura-thumb.webp');--v25-cover:url('/themes/v26/sakura-cover.webp');--v25-section:url('/themes/v26/sakura-section.webp');--v24-card:rgba(255,248,249,.86);--v24-border:#cfa6ac;--v25-thumb-card:rgba(255,253,250,.83);--paper:#fdecef;--ink:#654856;--edge:#cfa6ac;--btn:#cfa6ac;--btnInk:#ffffff;--nav:#fdeff1;--outside:#fdeff1;}
+
+.v15-shell.v25-art-songket,.v25-thumb.v25-art-songket{--v25-preview:url('/themes/v26/songket-thumb.webp');--v25-cover:url('/themes/v26/songket-cover.webp');--v25-section:url('/themes/v26/songket-section.webp');--v24-card:rgba(68,12,24,.88);--v24-border:#d5ac63;--v25-thumb-card:rgba(20,22,26,.83);--paper:#621925;--ink:#ffe4bc;--edge:#d5ac63;--btn:#d5ac63;--btnInk:#621925;--nav:#501826;--outside:#501826;}
+
+.v15-shell.v25-art-ocean,.v25-thumb.v25-art-ocean{--v25-preview:url('/themes/v26/ocean-thumb.webp');--v25-cover:url('/themes/v26/ocean-cover.webp');--v25-section:url('/themes/v26/ocean-section.webp');--v24-card:rgba(250,253,255,.83);--v24-border:#bd9b77;--v25-thumb-card:rgba(255,253,250,.83);--paper:#e3f3fa;--ink:#37647a;--edge:#bd9b77;--btn:#bd9b77;--btnInk:#ffffff;--nav:#e6f2f6;--outside:#e6f2f6;}
+
+.v15-shell.v25-art-sunset,.v25-thumb.v25-art-sunset{--v25-preview:url('/themes/v26/sunset-thumb.webp');--v25-cover:url('/themes/v26/sunset-cover.webp');--v25-section:url('/themes/v26/sunset-section.webp');--v24-card:rgba(255,248,240,.82);--v24-border:#d5a375;--v25-thumb-card:rgba(255,253,250,.83);--paper:#ffe9dd;--ink:#805148;--edge:#d5a375;--btn:#d5a375;--btnInk:#ffffff;--nav:#ffefe5;--outside:#ffefe5;}
+
+.v15-shell.v25-art-botanical,.v25-thumb.v25-art-botanical{--v25-preview:url('/themes/v26/botanical-thumb.webp');--v25-cover:url('/themes/v26/botanical-cover.webp');--v25-section:url('/themes/v26/botanical-section.webp');--v24-card:rgba(255,255,251,.85);--v24-border:#c4b392;--v25-thumb-card:rgba(255,253,250,.83);--paper:#f5f3ed;--ink:#746b5a;--edge:#c4b392;--btn:#c4b392;--btnInk:#ffffff;--nav:#f7f5f0;--outside:#f7f5f0;}
+
+.v15-shell.v25-art-violet,.v25-thumb.v25-art-violet{--v25-preview:url('/themes/v26/violet-thumb.webp');--v25-cover:url('/themes/v26/violet-cover.webp');--v25-section:url('/themes/v26/violet-section.webp');--v24-card:rgba(50,28,72,.86);--v24-border:#b8a2d5;--v25-thumb-card:rgba(20,22,26,.83);--paper:#3f275b;--ink:#f8e9ce;--edge:#b8a2d5;--btn:#b8a2d5;--btnInk:#3f275b;--nav:#342048;--outside:#342048;}
+
+.v15-shell.v25-art-tropical,.v25-thumb.v25-art-tropical{--v25-preview:url('/themes/v26/tropical-thumb.webp');--v25-cover:url('/themes/v26/tropical-cover.webp');--v25-section:url('/themes/v26/tropical-section.webp');--v24-card:rgba(255,255,248,.83);--v24-border:#b5aa85;--v25-thumb-card:rgba(255,253,250,.83);--paper:#f4f0e8;--ink:#49684d;--edge:#b5aa85;--btn:#b5aa85;--btnInk:#ffffff;--nav:#f5f2e8;--outside:#f5f2e8;}
+
+.v25-thumb[class*="v25-art-"] .mini-center{isolation:isolate}
+.v25-thumb.v25-art-lavender .mini-center,.v25-thumb.v25-art-sakura .mini-center,.v25-thumb.v25-art-ocean .mini-center,.v25-thumb.v25-art-sunset .mini-center,.v25-thumb.v25-art-botanical .mini-center,.v25-thumb.v25-art-tropical .mini-center{color:var(--ink)!important}
